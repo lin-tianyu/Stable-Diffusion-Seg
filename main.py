@@ -10,7 +10,7 @@ import torchvision
 t1 = time.time()
 import pytorch_lightning as pl
 t2 = time.time()
-# print(f"import pytorch-lightning using {t2-t1} seconds")
+print(f"import pytorch-lightning using {t2-t1} seconds")
 import matplotlib.pyplot as plt
 
 from tqdm import tqdm as _tqdm
@@ -31,7 +31,7 @@ from ldm.data.base import Txt2ImgIterableBaseDataset
 from ldm.util import instantiate_from_config
 # from scripts.slice2seg import save_dice_hist
 t3 = time.time()
-# print(f"finish importing using {t3-t0} seconds")
+print(f"finish importing using {t3-t0} seconds")
 
 # from pytorch_lightning.strategies import DDPStrategy
 
