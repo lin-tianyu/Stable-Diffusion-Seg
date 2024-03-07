@@ -90,7 +90,7 @@ Also, tensorboard will be on automatically. You can start a tensorboard session 
 
 ### Testing Scripts
 
-After training an SDSeg model, you should manually modify the run paths in`scripts/slice2seg.py`, and begin an inference process like
+After training an SDSeg model, you should **manually modify the run paths** in`scripts/slice2seg.py`, and begin an inference process like
 
 ```
 python -u scripts/slice2seg.py --dataset cvc
@@ -105,6 +105,8 @@ To conduct an stability evaluation process mentioned in the paper, you can start
 ```
 python -u scripts/slice2seg.py --dataset cvc --times 10 --save_results
 ```
+
+This will save 10 times of inference results in `./outputs/` folder. To run the stability evaluation, open `scripts/stability_evaluation.ipynb`, and **modify the path for the segmentation results**. Then, click `Run All` and enjoy.
 
 
 
