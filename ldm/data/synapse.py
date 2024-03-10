@@ -23,11 +23,6 @@ def softmax(array):
     """softmax for 1-D array"""
     return np.array(array) / np.sum(np.array(array))
 
-def sampling_rate(cls_id):
-    if len(cls_id)>1:
-        return [0.07] + list(softmax(1-train_pixel_distribution[cls_id[1:]]) * 0.93)
-    else:
-        return[1]   # only class 0
 
 COLOR_MAP = np.array([
             [  0.,   0.,   0.],
@@ -75,7 +70,7 @@ def decolorize(seg):
 
 
 class SynapseBase(Dataset):
-    """Synapse Dataset Base
+    """Synapse Dataset Base (aka BTCV dataset)
     Notes:
         - `segmentation` is for the diffusion training stage (range binary -1 and 1)
         - `image` is for conditional signal to guided final seg-map (range -1 to 1)
