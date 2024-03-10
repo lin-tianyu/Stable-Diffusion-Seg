@@ -4,7 +4,7 @@ model:
   params:
     num_classes: 2   # including background
     l_simple_weight: 1
-    seg_loss_weight: 0            # the \lambda in paper
+    seg_loss_weight: 1            # the \lambda in paper
     cond_stage_trainable: True    # modified
     concat_mode: True
     scale_by_std: True

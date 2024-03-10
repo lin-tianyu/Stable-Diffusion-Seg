@@ -10,6 +10,7 @@ model:
     loss_type: l1
     first_stage_key: "segmentation"
     cond_stage_key: "image"
+    conditioning_key: "concat"
     image_size: 32
     channels: 4
     cond_stage_trainable: true    # modified

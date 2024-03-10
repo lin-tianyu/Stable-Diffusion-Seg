@@ -1713,7 +1713,6 @@ class LatentDiffusion(DDPM):
 
         # try dice methods
         ema_dice, ema_iou, seg_label_pair = get_dice(data, used_sampler="direct", save_dir=save_dir)
-        # print("[ema metric]: ", ema_dice, ema_iou)
         multi_dice, multi_iou = np.array(ema_dice), np.array(ema_iou)
         metrics_dict.update({"val_avg_dice/direct_ema": np.mean(multi_dice)})
         metrics_dict.update({"val_avg_iou/direct_ema": np.mean(multi_iou)})
@@ -1724,13 +1723,12 @@ class LatentDiffusion(DDPM):
         seg_label_dict.update({"latent_seg_label-direct_ema": seg_label_pair[0],
                                "image_seg_label-direct-ema": seg_label_pair[1]})
         
-        # for steps in [10]:
-        #     print("ddim steps: ", steps)
-        #     ema_dice, ema_iou, seg_label_pair = get_dice(data, used_sampler="ddim", save_dir=save_dir, ddim_steps=steps)
-        #     metrics_dict.update({"val_avg_dice/ddim_ema": np.mean(np.array(ema_dice))})
-        #     metrics_dict.update({"val_avg_iou/ddim_ema": np.mean(np.array(ema_iou))})
-        #     seg_label_dict.update({"latent_seg_label-ddim_ema": seg_label_pair[0],
-        #                         "image_seg_label-ddim-ema": seg_label_pair[1]})
+        # print("ddim steps: ", steps)
+        # ema_dice, ema_iou, seg_label_pair = get_dice(data, used_sampler="ddim", save_dir=save_dir, ddim_steps=steps)
+        # metrics_dict.update({"val_avg_dice/ddim_ema": np.mean(np.array(ema_dice))})
+        # metrics_dict.update({"val_avg_iou/ddim_ema": np.mean(np.array(ema_iou))})
+        # seg_label_dict.update({"latent_seg_label-ddim_ema": seg_label_pair[0],
+        #                     "image_seg_label-ddim-ema": seg_label_pair[1]})
 
 
         # choose one as the segmentation monitor

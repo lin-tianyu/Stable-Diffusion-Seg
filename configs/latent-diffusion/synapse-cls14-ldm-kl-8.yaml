@@ -3,7 +3,7 @@ model:
   target: ldm.models.diffusion.ddpm.LatentDiffusion
   params:
     num_classes: 14   # including background
-    l_simple_weight: 0
+    l_simple_weight: 1
     seg_loss_weight: 1
     cond_stage_trainable: true    # modified
     concat_mode: True

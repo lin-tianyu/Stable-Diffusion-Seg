@@ -154,19 +154,14 @@ def main():
 
     
     if opt.dataset == "synapse-b":
-        # run = "2023-09-11T08-06-24_synapse-binary-segloss"
-        # run = "2023-09-11T08-08-46_synapse-binary-noiseloss"
-        run = "2024-03-06T04-47-15_lambda1_segMean"
-        # run = "2024-02-13T17-09-00_binary_9to2"
-        # run = "2024-02-13T17-12-19_binary_14to2"
+        run = "2024-02-13T17-09-00_binary_9to2"
         print("Evaluate on synapse dataset in binary segmentation manner.")
         opt.config = glob.glob(os.path.join("logs", run, "configs", "*-project.yaml"))[0]
         opt.ckpt = f"logs/{run}/checkpoints/last.ckpt"
         opt.outdir = "outputs/slice2seg-samples-synapse-b"
         dataset = SynapseValidationVolume(num_classes=2)
     elif opt.dataset == "synapse-m":
-        # run = "2023-10-05T09-33-54_synapse-KL8-cls14-LabelEmbedding-lr1e-5-10lr-binary-ch0"
-        run = "2024-02-13T06-23-37_Finetune_trainCond_scheduler_clsEmbLR100_9class_4GPUs"
+        run = "2023-10-05T09-33-54_synapse-KL8-cls14-LabelEmbedding-lr1e-5-10lr-binary-ch0"
         print("Evaluate on synapse dataset in multi-organ segmentation manner.")
         opt.config = glob.glob(os.path.join("logs", run, "configs", "*-project.yaml"))[0]
         opt.ckpt = f"logs/{run}/checkpoints/epoch=107-step=14999.ckpt"
@@ -197,16 +192,6 @@ def main():
         opt.outdir = "outputs/slice2seg-samples-cvc"
         dataset = CVCTest()
     elif opt.dataset == "kseg":
-        pass
-    elif opt.dataset == "isic17":
-        run = "2024-02-26T15-47-27_ISIC17_L1-seg-sim"
-        print("Evaluate on ISIC17 dataset in binary segmentation manner.")
-        opt.config = glob.glob(os.path.join("logs", run, "configs", "*-project.yaml"))[0]
-        # opt.ckpt = "models/ldm/synapse_binary/model.ckpt"
-        opt.ckpt = f"logs/{run}/checkpoints/last.ckpt"
-        opt.outdir = "outputs/slice2seg-samples-isic17"
-        dataset = ISIC17Test()
-    elif opt.dataset == "isic18":
         pass
     else:
         raise NotImplementedError(f"Not implement for dataset {opt.dataset}")

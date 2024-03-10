@@ -3,7 +3,7 @@ model:
   target: ldm.models.diffusion.ddpm.LatentDiffusion
   params:
     num_classes: 9   # including background, 9 classes following TransUnet
-    l_simple_weight: 0
+    l_simple_weight: 1
     seg_loss_weight: 1
     cond_stage_trainable: True    # modified
     concat_mode: True

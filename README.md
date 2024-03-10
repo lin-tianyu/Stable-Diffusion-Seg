@@ -1,5 +1,5 @@
 # Stable Diffusion Segmentation
-
+<!-- This is the repo of **Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process**. -->
 
 
 
@@ -19,7 +19,7 @@ conda activate sdseg
 
 ## SDSeg Framework
 
-SDSeg is built on Stable Diffusion V1, with a downsampling-factor 8 autoencoder, an denoising UNet and trainable vision encoder (with the same architecture of the encoder in the f=8 autoencoder).
+SDSeg is built on Stable Diffusion (V1), with a downsampling-factor 8 autoencoder, an denoising UNet and trainable vision encoder (with the same architecture of the encoder in the f=8 autoencoder).
 
 <img src="assets/framework.jpg" alt="framework" style="zoom:67%;" />
 
@@ -30,20 +30,20 @@ The image data should be place at `./data/`, while the dataloaders are at `./ldm
 We evaluate SDSeg on the following medical image datasets:
 
 1. `BTCV`
-    - URL: https://www.synapse.org/#!Synapse:syn3193805/wiki/217752
+    - URL: https://www.synapse.org/#!Synapse:syn3193805/wiki/217752, download the `Abdomen/RawData.zip`.
     - Preprocess: use the code in `./data/synapse/nii2format.py`
 
 2. `STS-3D`:
-    - URL: https://toothfairychallenges.github.io/
-    - Preprocess: N/A
+    - URL: https://toothfairychallenges.github.io/, download `labelled.zip`.
+    - Preprocess: use the code in `./data/sts3d/sts3d_preprocess.py`
 
 3. `REFUGE2`:
     - URL: https://refuge.grand-challenge.org/
     - Preprocess: following https://github.com/HzFu/MNet_DeepCDR
 
 4. `CVC-ClinicDB`:
-    - URL: https://polyp.grand-challenge.org/CVCClinicDB/
-    - Preprocess: N/A
+    - URL: https://www.kaggle.com/datasets/balraj98/cvcclinicdb
+    - Preprocess: None
 
 5. `Kvasir-SEG`:
     - URL: https://datasets.simula.no/kvasir-seg/
@@ -110,11 +110,17 @@ This will save 10 times of inference results in `./outputs/` folder. To run the 
 
 
 
-### Important Files to Focus on
+### Important Files and Folders to Focus on
+#### Training related
+- SDSeg model: `./ldm/models/diffusion/ddpm.py` in the class `LatentDiffusion`.
+- Experiment Configurations: `./configs/latent-diffusion`
 
-- SDSeg model: `./ldm/models/diffusion/ddpm.py` in the `LatentDiffusion` class.
-- Inference scripts: `./scripts/slice2seg.py`, but the main implementation of inference process is in `./ldm/models/diffusion/ddpm.py`, under the `log_dice` method of `LatentDiffusion`.
-- Dataset storation: should be in `./data/`
+#### Inference related
+- Inference starting scripts: `./scripts/slice2seg.py`, 
+- Inference implementation: `./ldm/models/diffusion/ddpm.py`, under the `log_dice` method of `LatentDiffusion`.
+
+#### Dataset related
+- Dataset storation: `./data/`
 - Dataloader files: `./ldm/data/`
 
 
