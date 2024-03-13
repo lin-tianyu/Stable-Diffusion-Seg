@@ -14,8 +14,8 @@ dist/
 wheels/
 
 # dataset package
-*.zip
-*.rar
+data/*/*.zip
+data/*/*.rar
 
 # pytorch/python/numpy formats
 *.pth
