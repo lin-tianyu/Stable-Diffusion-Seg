@@ -28,11 +28,8 @@ from ldm.data.refuge2 import REFUGE2Validation, REFUGE2Test
 from ldm.data.sts3d import STS3DValidation, STS3DTest
 from ldm.data.cvc import CVCValidation, CVCTest
 from ldm.data.kseg import KSEGValidation, KSEGTest
-from ldm.data.isic17 import ISIC17Validation, ISIC17Test
-from ldm.data.isic18 import ISIC18Validation, ISIC18Test
 
 from scipy.ndimage import zoom
-from ldm.data.synapse import COLOR_MAP, quantize_mapping, decolorize, colorize
 
 # from diffusers.pipelines.stable_diffusion.safety_checker import StableDiffusionSafetyChecker
 # from transformers import AutoFeatureExtractor

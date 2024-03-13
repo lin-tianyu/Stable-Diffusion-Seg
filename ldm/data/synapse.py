@@ -12,17 +12,6 @@ from sklearn.metrics.pairwise import pairwise_distances
 import torch.nn.functional as F
 import nibabel as nib
 
-train_pixel_distribution = np.array(
-    [9.54271542e-01, 5.38177007e-03, 2.30164099e-03, 2.31975002e-03,
-    4.22884468e-04, 2.51331787e-04, 2.44881894e-02, 5.99445428e-03,
-    1.59142062e-03, 1.18954373e-03, 5.27832639e-04, 1.12456102e-03,
-    5.87094159e-05, 7.63698597e-05]
-) 
-
-def softmax(array):
-    """softmax for 1-D array"""
-    return np.array(array) / np.sum(np.array(array))
-
 
 COLOR_MAP = np.array([
             [  0.,   0.,   0.],
@@ -42,17 +31,6 @@ COLOR_MAP = np.array([
         ])
 
 
-def quantize_mapping(colored_outuput, colormap=None):
-    if colormap is not None:
-        sim = 1 - pairwise_distances(colored_outuput.reshape(-1, 3), colormap)\
-            .reshape(*colored_outuput.shape[:2], colormap.shape[0])
-        sim_logits = torch.softmax(torch.tensor(sim), dim=2)
-        sim_class = torch.argmax(sim_logits, dim=2).unsqueeze(2).repeat((1, 1, 3))
-        sim_class = np.array(sim_class)
-    else:
-        sim_class = np.rint(colored_outuput)
-    return sim_class
-
 
 def colorize(seg, num_classes=14):
     """ seg (H W C)"""
@@ -60,12 +38,6 @@ def colorize(seg, num_classes=14):
         return seg * 255
     for idx in range(1, 14):
         seg[seg[:, :, 0] == idx] = COLOR_MAP[idx]
-    return seg
-
-
-def decolorize(seg):
-    for idx in range(1, 14):
-        seg[(seg == COLOR_MAP[idx]).all(2)] = idx
     return seg
 
 

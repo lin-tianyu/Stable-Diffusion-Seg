@@ -39,7 +39,7 @@ from ldm.modules.diffusionmodules.util import make_beta_schedule, extract_into_t
 from ldm.models.diffusion.ddim import DDIMSampler, DDIMSamplerWithGrad
 from ldm.models.diffusion.plms import PLMSSampler
 from scripts.slice2seg import prepare_for_first_stage, dice_score, iou_score
-from ldm.data.synapse import COLOR_MAP, quantize_mapping, decolorize, SynapseValidationVolume, colorize
+from ldm.data.synapse import colorize
 
 __conditioning_keys__ = {'concat': 'c_concat',
                          'crossattn': 'c_crossattn',

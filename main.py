@@ -1,7 +1,6 @@
 import time
 t0 = time.time()
 import argparse, os, sys, datetime, glob, importlib, csv
-from sklearn.metrics.pairwise import pairwise_distances
 import numpy as np
 import torch
 import torchvision
