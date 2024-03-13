@@ -14,11 +14,12 @@ dist/
 wheels/
 
 # dataset package
-data/*/*.zip
-data/*/*.rar
+*.zip
+*.rar
 
 # pytorch/python/numpy formats
 *.pth
+*.ckpt
 *.pkl
 *.npy
 *.ts
