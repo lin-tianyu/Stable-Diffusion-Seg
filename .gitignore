@@ -13,6 +13,10 @@ build/
 dist/
 wheels/
 
+# dataset package
+*.zip
+*.rar
+
 # pytorch/python/numpy formats
 *.pth
 *.pkl
