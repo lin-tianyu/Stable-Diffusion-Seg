@@ -12,17 +12,13 @@ from scipy.ndimage.interpolation import zoom
 import glob
 import h5py
 
-ROOT_PATH = "/GPUFS/nsccgz_ywang_zfd/LinTianyu/AIM/UniMatch/more-scenarios/medical"
-DATA_Path = os.path.join(ROOT_PATH, "dataset")
-
+ROOT_PATH = "data/sts3d/"
 
 class STS3DBase(Dataset):
     """STS-3D Dataset Base
     Notes:
         - `segmentation` is for the diffusion training stage (range binary -1 and 1)
         - `image` is for conditional signal to guided final seg-map (range -1 to 1)
-    TODO:
-        - extend to multi-label segmentation.
     """
     def __init__(self, data_root, size=256, interpolation="nearest", mode=None):
         self.data_root = data_root
@@ -31,13 +27,13 @@ class STS3DBase(Dataset):
         self.mode = mode
         assert mode in ["train", "val", "test"]
         if mode == "train":
-            with open(os.path.join(ROOT_PATH, "splits", "sts3d", "1", "labeled.txt"), 'r') as f:
+            with open(os.path.join(ROOT_PATH, "splits", "labeled.txt"), 'r') as f:
                 self.ids = f.read().splitlines()
         elif mode == "val":
-            with open(os.path.join(ROOT_PATH, "splits", "sts3d", "val.txt"), 'r') as f:
+            with open(os.path.join(ROOT_PATH, "splits", "val.txt"), 'r') as f:
                 self.ids = f.read().splitlines()
         elif mode == "test":
-            with open(os.path.join(ROOT_PATH, "splits", "sts3d", "valtest.txt"), 'r') as f:
+            with open(os.path.join(ROOT_PATH, "splits", "valtest.txt"), 'r') as f:
                 self.ids = f.read().splitlines()
         else:
             raise NotImplementedError
@@ -89,7 +85,7 @@ class STS3DBase(Dataset):
         # only support binary segmentation now:
         segmentation = np.array(segmentation.permute(1, 2, 0))
         image = np.array(image.permute(1, 2, 0))
-        segmentation = np.where(segmentation > 0.5, 1, 0)   # TODO: extend to multi-label segmentation
+        segmentation = np.where(segmentation > 0.5, 1, 0)   
         example["segmentation"] = ((segmentation * 2) - 1).astype(np.float32)   # range: binary -1 and 1
         example["image"] = ((image * 2) - 1).astype(np.float32)     # range from -1 to 1, np.float32
         return example
@@ -97,16 +93,16 @@ class STS3DBase(Dataset):
 
 class STS3DTrain(STS3DBase):
     def __init__(self, **kwargs):
-        super().__init__(data_root=DATA_Path, mode="train", **kwargs)
+        super().__init__(data_root="data/sts3d/", mode="train", **kwargs)
 
 
 class STS3DValidation(STS3DBase):
     def __init__(self, **kwargs):
-        super().__init__(data_root=DATA_Path, mode="val", **kwargs)
+        super().__init__(data_root="data/sts3d/", mode="val", **kwargs)
 
 class STS3DTest(STS3DBase):
     def __init__(self, **kwargs):
-        super().__init__(data_root=DATA_Path, mode="test", **kwargs)
+        super().__init__(data_root="data/sts3d/", mode="test", **kwargs)
 
 
 # class STS3DNoEmptyTrain(STS3DBase):
