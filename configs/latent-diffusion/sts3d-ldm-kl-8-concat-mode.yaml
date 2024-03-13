@@ -48,7 +48,7 @@ model:
       params:
         embed_dim: 4
         monitor: "val/rec_loss"
-        ckpt_path: "models/first_stage_models/kl-f8/model_pretrain.ckpt"
+        ckpt_path: "models/first_stage_models/kl-f8/model.ckpt"
         ddconfig:
           double_z: True
           z_channels: 4
@@ -66,7 +66,7 @@ model:
     cond_stage_config: #"__is_first_stage__"
       target: ldm.modules.encoders.modules.AEEncoderEmbedder
       params:
-        ckpt_path: "models/first_stage_models/kl-f8/model_pretrain.ckpt"
+        ckpt_path: "models/first_stage_models/kl-f8/model.ckpt"
         embed_dim: 4
         double_z: True
         z_channels: 4

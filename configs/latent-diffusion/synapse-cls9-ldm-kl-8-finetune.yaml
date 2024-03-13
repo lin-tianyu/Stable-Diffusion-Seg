@@ -54,7 +54,7 @@ model:
       target: ldm.models.autoencoder.AutoencoderKL
       params:
         monitor: "val/rec_loss"
-        # ckpt_path: "models/first_stage_models/kl-f8/model_pretrain.ckpt"    # reload binary seg pretrained model
+        # ckpt_path: "models/first_stage_models/kl-f8/model.ckpt"    # reload binary seg pretrained model
         embed_dim: 4
         ddconfig:
           double_z: True
@@ -73,7 +73,7 @@ model:
     cond_stage_config: #"__is_first_stage__"
       target: ldm.modules.encoders.modules.AEEncoderEmbedder
       params:
-        # ckpt_path: "models/first_stage_models/kl-f8/model_pretrain.ckpt"    # reload binary seg pretrained model
+        # ckpt_path: "models/first_stage_models/kl-f8/model.ckpt"    # reload binary seg pretrained model
         embed_dim: 4
         double_z: True
         z_channels: 4

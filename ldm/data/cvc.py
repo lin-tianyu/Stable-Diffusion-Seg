@@ -90,15 +90,15 @@ class CVCBase(Dataset):
 
 class CVCTrain(CVCBase):
     def __init__(self, **kwargs):
-        super().__init__(data_root="data/CVC/Original", mode="train", **kwargs)
+        super().__init__(data_root="data/CVC/PNG/Original", mode="train", **kwargs)
 
 
 class CVCValidation(CVCBase):
     def __init__(self, **kwargs):
-        super().__init__(data_root="data/CVC/Original", mode="val", **kwargs)
+        super().__init__(data_root="data/CVC/PNG/Original", mode="val", **kwargs)
 
 
 class CVCTest(CVCBase):
     def __init__(self, **kwargs):
-        super().__init__(data_root="data/CVC/Original", mode="test", **kwargs)
+        super().__init__(data_root="data/CVC/PNG/Original", mode="test", **kwargs)
 
