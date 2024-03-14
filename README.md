@@ -130,6 +130,7 @@ This will save 10 times of inference results in `./outputs/` folder. To run the 
 - [ ] Organizing the inference code. (Toooo redundant right now.)
 - [ ] Reimplement SDSeg in OOP. (Elegance is the key!)
 - [ ] Add README for multi-class segmentation.
+- [ ] Release model weights.
 
 
 
