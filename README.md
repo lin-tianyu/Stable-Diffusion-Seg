@@ -7,6 +7,8 @@
   - [Requirements](#requirements)
   - [Dataset Settings](#dataset-settings)
   - [Model Weights](#model-weights)
+    - [Pretrained Models](#pretrained-models)
+    - [Trained SDSeg Models](#trained-sdseg-models)
   - [Scripts](#scripts)
     - [Training Scripts](#training-scripts)
     - [Testing Scripts](#testing-scripts)
@@ -71,7 +73,9 @@ We evaluate SDSeg on the following medical image datasets:
 
 ## Model Weights
 
+### Pretrained Models
 SDSeg use pre-trained weights from SD to initialize before training.
+
 For pre-trained weights of the autoencoder and conditioning model, run
 
 ```
@@ -84,7 +88,7 @@ For pre-trained wights of the denoising UNet, run
 bash scripts/download_models_lsun_churches.sh
 ```
 
-
+### Trained SDSeg Models
 > The model weights trained on medical image datasets will be available soon.
 
 ## Scripts
