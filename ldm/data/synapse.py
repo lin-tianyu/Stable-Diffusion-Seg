@@ -8,7 +8,6 @@ from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
 import glob
-from sklearn.metrics.pairwise import pairwise_distances
 import torch.nn.functional as F
 import nibabel as nib
 

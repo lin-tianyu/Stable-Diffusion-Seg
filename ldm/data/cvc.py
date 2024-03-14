@@ -38,7 +38,7 @@ class CVCBase(Dataset):
         example = dict((k, self.labels[k][i]) for k in self.labels)
         # segmentation = Image.open(example["file_path_"].replace("Original", "GroundTruth")).convert("RGB")
         # image = Image.open(example["file_path_"]).convert("RGB")    # same name, different postfix
-        segmentation = Image.fromarray(cv2.cvtColor(cv2.imread(example["file_path_"].replace("Original", "GroundTruth")),cv2.COLOR_BGR2RGB))
+        segmentation = Image.fromarray(cv2.cvtColor(cv2.imread(example["file_path_"].replace("Original", "Ground Truth")),cv2.COLOR_BGR2RGB))
         image = Image.fromarray(cv2.cvtColor(cv2.imread(example["file_path_"]),cv2.COLOR_BGR2RGB))
 
         if self.size is not None:

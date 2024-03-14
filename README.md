@@ -1,7 +1,22 @@
 # Stable Diffusion Segmentation
 <!-- This is the repo of **Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process**. -->
 
-
+- [Stable Diffusion Segmentation](#stable-diffusion-segmentation)
+  - [Requirements](#requirements)
+  - [SDSeg Framework](#sdseg-framework)
+    - [Dataset Settings](#dataset-settings)
+    - [Downloading Pre-trained Models](#downloading-pre-trained-models)
+    - [Model Weights](#model-weights)
+  - [Scripts](#scripts)
+    - [Training Scripts](#training-scripts)
+    - [Testing Scripts](#testing-scripts)
+    - [Stability Evaluaition](#stability-evaluaition)
+  - [Important Files and Folders to Focus on](#important-files-and-folders-to-focus-on)
+    - [Training related](#training-related)
+    - [Inference related](#inference-related)
+    - [Dataset related](#dataset-related)
+  - [Fixing Requirements Problem](#fixing-requirements-problem)
+  - [TODO List](#todo-list)
 
 ## Requirements
 
@@ -13,8 +28,13 @@ conda env create -f environment.yaml
 conda activate sdseg
 ```
 
-> WARNING: `environment.yaml` has not been tested yet, but will be tested and updated soon.
-
+Then, install some dependencies by:
+```
+pip install -e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
+pip install -e git+https://github.com/openai/CLIP.git@main#egg=clip
+pip install -e .
+``` 
+If you face github connection issues when downloading `taming-transformers` or `clip`, see [Fixing Requirements](#fixing-requirements-problem).
 
 
 ## SDSeg Framework
@@ -70,6 +90,7 @@ bash scripts/download_models_lsun_churches.sh
 
 > The model weights will be available soon.
 
+## Scripts
 ### Training Scripts
 
 Take CVC dataset as an example, run
@@ -110,20 +131,50 @@ This will save 10 times of inference results in `./outputs/` folder. To run the 
 
 
 
-### Important Files and Folders to Focus on
-#### Training related
+## Important Files and Folders to Focus on
+### Training related
 - SDSeg model: `./ldm/models/diffusion/ddpm.py` in the class `LatentDiffusion`.
 - Experiment Configurations: `./configs/latent-diffusion`
 
-#### Inference related
+### Inference related
 - Inference starting scripts: `./scripts/slice2seg.py`, 
 - Inference implementation: `./ldm/models/diffusion/ddpm.py`, under the `log_dice` method of `LatentDiffusion`.
 
-#### Dataset related
+### Dataset related
 - Dataset storation: `./data/`
 - Dataloader files: `./ldm/data/`
 
+## Fixing Requirements Problem
+> This is for users who face connections when downloading `taming-transformers` and `clip`.
 
+After creating and entering the `sdseg` environment:
+1. create an `src` folder and enter:
+```
+mkdir src
+cd src
+```
+2. download the following codebases in `*.zip` files and upload to `src/`:
+    - https://github.com/CompVis/taming-transformers, `taming-transformers-master.zip`
+    - https://github.com/openai/CLIP, `CLIP-main.zip`
+3. unzip and install taming-transformers:
+```
+unzip taming-transformers-master.zip
+cd taming-transformers-master
+pip install -e .
+cd ..
+```
+4. unzip and install clip:
+```
+unzip CLIP-main.zip
+cd CLIP-main
+pip install -e .
+cd ..
+```
+5. install latent-diffusion:
+```
+cd ..
+pip install -e .
+```
 
 ## TODO List
 
