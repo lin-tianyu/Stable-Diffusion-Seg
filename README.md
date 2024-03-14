@@ -146,7 +146,7 @@ Dataset related:
 - Dataloader files: `./ldm/data/`
 
 ## Fixing Requirements Problem
-> This is for users who face connections when downloading `taming-transformers` and `clip`.
+> This is for users who face connection problems when downloading `taming-transformers` and `clip`.
 
 After creating and entering the `sdseg` environment:
 1. create an `src` folder and enter:
