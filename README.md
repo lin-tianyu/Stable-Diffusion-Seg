@@ -108,6 +108,12 @@ tail -f nohup/experiment_name.log
 
 Also, tensorboard will be on automatically. You can start a tensorboard session with `--logdir=./logs/`
 
+> WARNING: By default, tensorboard saves a lot of images and scalars, this may requires a large amount of storage. 
+> 
+> To lower storage requirements, you may want to:
+> 1. refer to the config file (`*.yaml`) and increase the `batch_frequency` parameter;
+> 2. refer to the `log_images` function of `LatentDiffusion` in `./ldm/models/diffusion/ddpm.py`, and delete some image kind that you don't want to log.
+
 
 
 ### Testing Scripts
