@@ -663,11 +663,11 @@ if __name__ == "__main__":
             print(f"Monitoring {model.monitor} as checkpoint metric.")
             if model.monitor == "val/rec_loss":
                 default_modelckpt_cfg["params"]["monitor"] = model.monitor
-                default_modelckpt_cfg["params"]["save_top_k"] = 3
+                default_modelckpt_cfg["params"]["save_top_k"] = 1   # to save storage space
             elif model.monitor == "val_avg_dice":
                 default_modelckpt_cfg["params"]["every_n_train_steps"] = lightning_config.callbacks.image_logger.params.log_dice_frequency
                 default_modelckpt_cfg["params"]["monitor"] = model.monitor
-                default_modelckpt_cfg["params"]["save_top_k"] = 3
+                default_modelckpt_cfg["params"]["save_top_k"] = 1   # to save storage space
                 default_modelckpt_cfg["params"]["mode"] = "max"
             else:
                 raise NotImplementedError(f"Not implemented for {model.monitor} monitor.")
