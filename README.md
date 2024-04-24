@@ -5,7 +5,6 @@
 - [Stable Diffusion Segmentation](#stable-diffusion-segmentation)
   - [SDSeg Framework](#sdseg-framework)
   - [Requirements](#requirements)
-    - [Fixing Requirements Problem](#fixing-requirements-problem)
   - [Dataset Settings](#dataset-settings)
   - [Model Weights](#model-weights)
     - [Pretrained Models](#pretrained-models)
@@ -39,14 +38,12 @@ pip install -e git+https://github.com/CompVis/taming-transformers.git@master#egg
 pip install -e git+https://github.com/openai/CLIP.git@main#egg=clip
 pip install -e .
 ```
-If you face github connection issues when downloading `taming-transformers` or `clip`, see [Fixing Requirements](#fixing-requirements-problem).
+If you face github connection issues when downloading `taming-transformers` or `clip`, see below:
 
 <details>
 
-<summary>Solving connection issues for "taming-transformers" or "clip"</summary>
+<summary>Solving connection issues</summary>
 
-### Fixing Requirements Problem
-> This is for users who face connection problems when downloading `taming-transformers` and `clip`.
 
 After creating and entering the `sdseg` environment:
 1. create an `src` folder and enter:
@@ -76,6 +73,8 @@ cd ..
 cd ..
 pip install -e .
 ```
+---
+
 
 </details>
 
