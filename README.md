@@ -5,6 +5,7 @@
 - [Stable Diffusion Segmentation](#stable-diffusion-segmentation)
   - [SDSeg Framework](#sdseg-framework)
   - [Requirements](#requirements)
+    - [Fixing Requirements Problem](#fixing-requirements-problem)
   - [Dataset Settings](#dataset-settings)
   - [Model Weights](#model-weights)
     - [Pretrained Models](#pretrained-models)
@@ -14,7 +15,6 @@
     - [Testing Scripts](#testing-scripts)
     - [Stability Evaluaition](#stability-evaluaition)
   - [Important Files and Folders to Focus on](#important-files-and-folders-to-focus-on)
-  - [Fixing Requirements Problem](#fixing-requirements-problem)
   - [TODO List](#todo-list)
 
 ## SDSeg Framework
@@ -41,6 +41,43 @@ pip install -e .
 ```
 If you face github connection issues when downloading `taming-transformers` or `clip`, see [Fixing Requirements](#fixing-requirements-problem).
 
+<details>
+
+<summary>Solving connection issues for "taming-transformers" or "clip"</summary>
+
+### Fixing Requirements Problem
+> This is for users who face connection problems when downloading `taming-transformers` and `clip`.
+
+After creating and entering the `sdseg` environment:
+1. create an `src` folder and enter:
+```
+mkdir src
+cd src
+```
+2. download the following codebases in `*.zip` files and upload to `src/`:
+    - https://github.com/CompVis/taming-transformers, `taming-transformers-master.zip`
+    - https://github.com/openai/CLIP, `CLIP-main.zip`
+3. unzip and install taming-transformers:
+```
+unzip taming-transformers-master.zip
+cd taming-transformers-master
+pip install -e .
+cd ..
+```
+4. unzip and install clip:
+```
+unzip CLIP-main.zip
+cd CLIP-main
+pip install -e .
+cd ..
+```
+5. install latent-diffusion:
+```
+cd ..
+pip install -e .
+```
+
+</details>
 
 ## Dataset Settings
 
@@ -147,37 +184,7 @@ Dataset related:
 - Dataset storation: `./data/`
 - Dataloader files: `./ldm/data/`
 
-## Fixing Requirements Problem
-> This is for users who face connection problems when downloading `taming-transformers` and `clip`.
 
-After creating and entering the `sdseg` environment:
-1. create an `src` folder and enter:
-```
-mkdir src
-cd src
-```
-2. download the following codebases in `*.zip` files and upload to `src/`:
-    - https://github.com/CompVis/taming-transformers, `taming-transformers-master.zip`
-    - https://github.com/openai/CLIP, `CLIP-main.zip`
-3. unzip and install taming-transformers:
-```
-unzip taming-transformers-master.zip
-cd taming-transformers-master
-pip install -e .
-cd ..
-```
-4. unzip and install clip:
-```
-unzip CLIP-main.zip
-cd CLIP-main
-pip install -e .
-cd ..
-```
-5. install latent-diffusion:
-```
-cd ..
-pip install -e .
-```
 
 ## TODO List
 
