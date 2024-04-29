@@ -3,7 +3,7 @@
 
 
 ## SDSeg Framework
-<img src="assets/framework.jpg" alt="framework" style="zoom: 30%;" />
+<img src="assets/framework.jpg" alt="framework" style="zoom: 50%;" />
 
 SDSeg is built on Stable Diffusion (V1), with a downsampling-factor 8 autoencoder, an denoising UNet and trainable vision encoder (with the same architecture of the encoder in the f=8 autoencoder).
 
