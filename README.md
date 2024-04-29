@@ -2,20 +2,6 @@
 <!-- This is the repo of **Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process**. -->
 
 
-- [Stable Diffusion Segmentation](#stable-diffusion-segmentation)
-  - [SDSeg Framework](#sdseg-framework)
-  - [Requirements](#requirements)
-  - [Dataset Settings](#dataset-settings)
-  - [Model Weights](#model-weights)
-    - [Pretrained Models](#pretrained-models)
-    - [Trained SDSeg Models](#trained-sdseg-models)
-  - [Scripts](#scripts)
-    - [Training Scripts](#training-scripts)
-    - [Testing Scripts](#testing-scripts)
-    - [Stability Evaluaition](#stability-evaluaition)
-  - [Important Files and Folders to Focus on](#important-files-and-folders-to-focus-on)
-  - [TODO List](#todo-list)
-
 ## SDSeg Framework
 <img src="assets/framework.jpg" alt="framework" style="zoom: 30%;" />
 
