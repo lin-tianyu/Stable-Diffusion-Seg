@@ -32,7 +32,7 @@ If you face github connection issues when downloading `taming-transformers` or `
 
 After creating and entering the `sdseg` environment:
 1. create an `src` folder and enter:
-```
+```bash
 mkdir src
 cd src
 ```
@@ -40,21 +40,21 @@ cd src
     - https://github.com/CompVis/taming-transformers, `taming-transformers-master.zip`
     - https://github.com/openai/CLIP, `CLIP-main.zip`
 3. unzip and install taming-transformers:
-```
+```bash
 unzip taming-transformers-master.zip
 cd taming-transformers-master
 pip install -e .
 cd ..
 ```
 4. unzip and install clip:
-```
+```bash
 unzip CLIP-main.zip
 cd CLIP-main
 pip install -e .
 cd ..
 ```
 5. install latent-diffusion:
-```
+```bash
 cd ..
 pip install -e .
 ```
