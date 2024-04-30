@@ -13,13 +13,13 @@ SDSeg is built on Stable Diffusion (V1), with a downsampling-factor 8 autoencode
 A suitable [conda](https://conda.io/) environment named `sdseg` can be created
 and activated with:
 
-```
+```bash
 conda env create -f environment.yaml
 conda activate sdseg
 ```
 
 Then, install some dependencies by:
-```
+```bash
 pip install -e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
 pip install -e git+https://github.com/openai/CLIP.git@main#egg=clip
 pip install -e .
@@ -29,7 +29,7 @@ If you face github connection issues when downloading `taming-transformers` or `
 <details>
 
 <summary>Solving connection issues</summary>
-```
+
 After creating and entering the `sdseg` environment:
 1. create an `src` folder and enter:
 ```bash
@@ -57,7 +57,6 @@ cd ..
 ```bash
 cd ..
 pip install -e .
-```
 ```
 ---
 
@@ -100,13 +99,13 @@ SDSeg use pre-trained weights from SD to initialize before training.
 
 For pre-trained weights of the autoencoder and conditioning model, run
 
-```
+```bash
 bash scripts/download_first_stages_f8.sh
 ```
 
 For pre-trained wights of the denoising UNet, run
 
-```
+```bash
 bash scripts/download_models_lsun_churches.sh
 ```
 
@@ -118,13 +117,13 @@ bash scripts/download_models_lsun_churches.sh
 
 Take CVC dataset as an example, run
 
-```
+```bash
 nohup python -u main.py --base configs/latent-diffusion/cvc-ldm-kl-8.yaml -t --gpus 0, --name experiment_name > nohup/experiment_name.log 2>&1 &
 ```
 
 You can check the training log by 
 
-```
+```bash
 tail -f nohup/experiment_name.log
 ```
 
@@ -138,7 +137,7 @@ Also, tensorboard will be on automatically. You can start a tensorboard session 
 
 After training an SDSeg model, you should **manually modify the run paths** in`scripts/slice2seg.py`, and begin an inference process like
 
-```
+```bash
 python -u scripts/slice2seg.py --dataset cvc
 ```
 
@@ -148,7 +147,7 @@ python -u scripts/slice2seg.py --dataset cvc
 
 To conduct an stability evaluation process mentioned in the paper, you can start the test by
 
-```
+```bash
 python -u scripts/slice2seg.py --dataset cvc --times 10 --save_results
 ```
 
@@ -177,6 +176,7 @@ Dataset related:
 - [ ] Reimplement SDSeg in OOP. (Elegance is the key!)
 - [ ] Add README for multi-class segmentation.
 - [ ] Release model weights.
+- [ ] Reimplement using diffusers.
 
 
 
