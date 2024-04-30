@@ -5,7 +5,7 @@
 ## SDSeg Framework
 <img src="assets/framework.jpg" alt="framework" style="zoom: 50%;" />
 
-SDSeg is built on Stable Diffusion (V1), with a downsampling-factor 8 autoencoder, an denoising UNet and trainable vision encoder (with the same architecture of the encoder in the f=8 autoencoder).
+SDSeg is built on Stable Diffusion (V1), with a downsampling-factor 8 autoencoder, a denoising UNet, and trainable vision encoder (with the same architecture of the encoder in the f=8 autoencoder).
 
 
 ## Requirements
@@ -24,11 +24,13 @@ pip install -e git+https://github.com/CompVis/taming-transformers.git@master#egg
 pip install -e git+https://github.com/openai/CLIP.git@main#egg=clip
 pip install -e .
 ```
-If you face github connection issues when downloading `taming-transformers` or `clip`, see below:
 
+    
 <details>
 
-<summary>Solving connection issues</summary>
+<summary>Solve GitHub connection issues when downloading <code class="inlinecode">taming-transformers</code> or <code class="inlinecode">clip</code></summary>
+
+---
 
 After creating and entering the `sdseg` environment:
 1. create an `src` folder and enter:
@@ -58,10 +60,12 @@ cd ..
 cd ..
 pip install -e .
 ```
+
+Then you're good to go!
+
 ---
-
-
 </details>
+
 
 ## Dataset Settings
 
@@ -95,7 +99,7 @@ We evaluate SDSeg on the following medical image datasets:
 ## Model Weights
 
 ### Pretrained Models
-SDSeg use pre-trained weights from SD to initialize before training.
+SDSeg uses pre-trained weights from SD to initialize before training.
 
 For pre-trained weights of the autoencoder and conditioning model, run
 
@@ -135,7 +139,7 @@ Also, tensorboard will be on automatically. You can start a tensorboard session 
 
 ### Testing Scripts
 
-After training an SDSeg model, you should **manually modify the run paths** in`scripts/slice2seg.py`, and begin an inference process like
+After training an SDSeg model, you should **manually modify the run paths** in `scripts/slice2seg.py`, and begin an inference process like
 
 ```bash
 python -u scripts/slice2seg.py --dataset cvc
