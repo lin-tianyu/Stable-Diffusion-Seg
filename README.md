@@ -30,7 +30,6 @@ If you face github connection issues when downloading `taming-transformers` or `
 
 <summary>Solving connection issues</summary>
 
-````
 After creating and entering the `sdseg` environment:
 1. create an `src` folder and enter:
 ```
@@ -59,7 +58,6 @@ cd ..
 cd ..
 pip install -e .
 ```
-````
 ---
 
 
