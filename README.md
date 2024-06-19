@@ -1,6 +1,8 @@
 # Stable Diffusion Segmentation
-<!-- This is the repo of **Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process**. -->
+This is the repo of **Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process**.
 
+## News
+- **SDSeg** has been accepted by MICCAI2024!🎉🥳 Our paper will be available soon.
 
 ## SDSeg Framework
 <img src="assets/framework.jpg" alt="framework" style="zoom: 50%;" />
