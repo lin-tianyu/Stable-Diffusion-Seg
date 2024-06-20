@@ -1,4 +1,4 @@
-# Stable Diffusion Segmentation
+# Stable Diffusion Segmentation (SDSeg)
 This is the repo of **Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process**.
 
 ## News
