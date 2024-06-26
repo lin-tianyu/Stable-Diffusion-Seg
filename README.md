@@ -174,6 +174,17 @@ Dataset related:
 - Dataset storation: `./data/`
 - Dataloader files: `./ldm/data/`
 
+## Citation
+If you find our work useful, please cite:
+```biblabtex
+@inproceedings{lin2024stable,
+  title={Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process},
+  author={Lin, Tianyu and Chen, Zhiguang and Yan, Zhonghao and Zheng, Fudan and Yu, Weijiang},
+  journal={International Conference on Medical Image Computing and Computer-Assisted Intervention},
+  year={2024},
+  organization={Springer}
+}
+```
 
 
 ## TODO List
