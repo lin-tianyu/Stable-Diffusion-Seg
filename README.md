@@ -3,7 +3,7 @@ This is the repo of **Stable Diffusion Segmentation for Biomedical Images with S
 
 
 
-By Tianyu Lin ![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/Tianyu_Linn?link=https%3A%2F%2Fx.com%2FTianyu_Linn), Zhiguang Chen, Zhonghao Yan, Fudan Zheng and Weijiang Yu.
+By Tianyu Lin [![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/Tianyu_Linn?label=Follow)](https://twitter.com/Tianyu_Linn), Zhiguang Chen, Zhonghao Yan, Fudan Zheng and Weijiang Yu.
 
 ## News
 - 06/17: **SDSeg** has been accepted by MICCAI2024! 🎉🥳 Our paper will be available soon.
