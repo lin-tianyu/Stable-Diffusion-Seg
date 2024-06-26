@@ -4,7 +4,7 @@ This is the repo of **Stable Diffusion Segmentation for Biomedical Images with S
 
 
 
-By [![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/Tianyu_Linn?label=Tianyu_Lin)](https://twitter.com/Tianyu_Linn), Zhiguang Chen, [![GitHub User's stars](https://img.shields.io/github/stars/zzzyzh?label=Zhonghao%20Yan)](https://github.com/zzzyzh), Fudan Zheng and Weijiang Yu.
+By [![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/Tianyu_Linn?label=Tianyu_Lin)](https://twitter.com/Tianyu_Linn) | Zhiguang Chen | [![GitHub User's stars](https://img.shields.io/github/stars/zzzyzh?label=Zhonghao%20Yan)](https://github.com/zzzyzh) | Fudan Zheng | [![GitHub User's stars](https://img.shields.io/github/stars/yuweijiang?label=Weijiang%20Yu)]](https://github.com/yuweijiang).
 
 ## News
 - 06/17: **SDSeg** has been accepted by MICCAI2024! 🎉🥳 Our paper will be available soon.
