@@ -2,6 +2,7 @@
 This is the repo of **Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process**. 
 
 [![GitHub Repo stars](https://img.shields.io/github/stars/lin-tianyu/Stable-Diffusion-Seg?style=social&label=Stars)](https://github.com/lin-tianyu/Stable-Diffusion-Seg/)
+---
 
 By [![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/Tianyu_Linn?label=Tianyu_Lin)](https://twitter.com/Tianyu_Linn) | Zhiguang Chen | [![GitHub User's stars](https://img.shields.io/github/stars/zzzyzh?label=Zhonghao%20Yan)](https://github.com/zzzyzh) | Fudan Zheng | [![GitHub User's stars](https://img.shields.io/github/stars/yuweijiang?label=Weijiang%20Yu)](https://github.com/yuweijiang)
 
