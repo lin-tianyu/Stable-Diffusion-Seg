@@ -74,32 +74,17 @@ Then you're good to go!
 
 
 ## Dataset Settings
-
-The image data should be place at `./data/`, while the dataloaders are at `./ldm/data/`
+> The image data should be place at `./data/`, while the dataloaders are at `./ldm/data/`
 
 We evaluate SDSeg on the following medical image datasets:
 
-1. `BTCV`
-    - URL: https://www.synapse.org/#!Synapse:syn3193805/wiki/217752, download the `Abdomen/RawData.zip`.
-    - Preprocess: use the code in `./data/synapse/nii2format.py`
-
-2. `STS-3D`:
-    - URL: https://toothfairychallenges.github.io/, download `labelled.zip`.
-    - Preprocess: use the code in `./data/sts3d/sts3d_preprocess.py`
-
-3. `REFUGE2`:
-    - URL: https://refuge.grand-challenge.org/
-    - Preprocess: following https://github.com/HzFu/MNet_DeepCDR
-
-4. `CVC-ClinicDB`:
-    - URL: https://www.kaggle.com/datasets/balraj98/cvcclinicdb
-    - Preprocess: None
-
-5. `Kvasir-SEG`:
-    - URL: https://datasets.simula.no/kvasir-seg/
-    - Preprocess: None
-
-
+| Dataset        | URL                                                                                           | Preprocess                                         |
+|----------------|-----------------------------------------------------------------------------------------------|----------------------------------------------------|
+| `BTCV`         | https://www.synapse.org/#!Synapse:syn3193805/wiki/217752, download the `Abdomen/RawData.zip`. | Use the code in `./data/synapse/nii2format.py`     |
+| `STS-3D`       | https://toothfairychallenges.github.io/, download `labelled.zip`.                             | Use the code in `./data/sts3d/sts3d_preprocess.py` |
+| `REFUGE2`      | https://refuge.grand-challenge.org/                                                           | Following https://github.com/HzFu/MNet_DeepCDR     |
+| `CVC-ClinicDB` | https://www.kaggle.com/datasets/balraj98/cvcclinicdb                                          | None                                               |
+| `Kvasir-SEG`   | https://datasets.simula.no/kvasir-seg/                                                        | None                                               |
 
 
 ## Model Weights
