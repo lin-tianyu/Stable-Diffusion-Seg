@@ -1,6 +1,9 @@
 # Stable Diffusion Segmentation (SDSeg)
 This is the repo of **Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process**.
 
+![GitHub Repo stars](https://img.shields.io/github/stars/lin-tianyu/Stable-Diffusion-Seg)
+
+
 ## News
 - 06/17: **SDSeg** has been accepted by MICCAI2024! 🎉🥳 Our paper will be available soon.
 
