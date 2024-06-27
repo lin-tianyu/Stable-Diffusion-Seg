@@ -6,7 +6,7 @@ By [![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/Tianyu_
 
 
 ## News
-- 06/27: The paper of SDSeg has been pre-released on arxiv: [![Static Badge](https://img.shields.io/badge/arxiv-2406.18361-white?style=flat&logo=arxiv)](https://arxiv.org/abs/2406.18361)
+- 06/27: The paper of SDSeg has been pre-released on [![Static Badge](https://img.shields.io/badge/arxiv-2406.18361-white?style=flat&logo=arxiv)](https://arxiv.org/abs/2406.18361)
 - 06/17: 🎉🥳 **SDSeg** has been accepted by MICCAI2024!  Our paper will be available soon.
 
 ## SDSeg Framework
