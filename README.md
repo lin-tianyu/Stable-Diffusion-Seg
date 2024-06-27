@@ -81,11 +81,11 @@ We evaluate SDSeg on the following medical image datasets:
 
 | Dataset        | URL                                                                                           | Preprocess                                         |
 |----------------|-----------------------------------------------------------------------------------------------|----------------------------------------------------|
-| `BTCV`         | https://www.synapse.org/#!Synapse:syn3193805/wiki/217752, download the `Abdomen/RawData.zip`. | Use the code in `./data/synapse/nii2format.py`     |
-| `STS-3D`       | https://toothfairychallenges.github.io/, download `labelled.zip`.                             | Use the code in `./data/sts3d/sts3d_preprocess.py` |
-| `REFUGE2`      | https://refuge.grand-challenge.org/                                                           | Following https://github.com/HzFu/MNet_DeepCDR     |
-| `CVC-ClinicDB` | https://www.kaggle.com/datasets/balraj98/cvcclinicdb                                          | None                                               |
-| `Kvasir-SEG`   | https://datasets.simula.no/kvasir-seg/                                                        | None                                               |
+| `BTCV`         | [This URL](https://www.synapse.org/#!Synapse:syn3193805/wiki/217752), <br>download the `Abdomen/RawData.zip`. | Use the code in <br>`./data/synapse/nii2format.py`     |
+| `STS-3D`       | [This URL](https://toothfairychallenges.github.io/), <br>download the `labelled.zip`.                             | Use the code in <br>`./data/sts3d/sts3d_preprocess.py` |
+| `REFUGE2`      | [This URL](https://refuge.grand-challenge.org/)                                                           | Following [this repo](https://github.com/HzFu/MNet_DeepCDR)     |
+| `CVC-ClinicDB` | [This URL](https://www.kaggle.com/datasets/balraj98/cvcclinicdb)                                          | None                                               |
+| `Kvasir-SEG`   | [This URL](https://datasets.simula.no/kvasir-seg/)                                                        | None                                               |
 
 
 ## Model Weights
