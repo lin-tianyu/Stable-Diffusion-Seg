@@ -10,7 +10,7 @@ By [![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/Tianyu_
 - 06/17: 🎉🥳 **SDSeg** has been accepted by MICCAI2024!  Our paper will be available soon.
 
 ## SDSeg Framework
-<img src="assets/framework.jpg" alt="framework" style="zoom: 50%;" />
+<img src="assets/framework.jpg" alt="framework" width="66%" height="66%" />
 
 SDSeg is built on Stable Diffusion (V1), with a downsampling-factor 8 autoencoder, a denoising UNet, and trainable vision encoder (with the same architecture of the encoder in the f=8 autoencoder).
 
@@ -169,7 +169,7 @@ If you find our work useful, please cite:
 ```biblabtex
 @inproceedings{lin2024stable,
   title={Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process},
-  author={Lin, Tianyu and Chen, Zhiguang and Yan, Zhonghao and Zheng, Fudan and Yu, Weijiang},
+  author={Lin, Tianyu and Chen, Zhiguang and Yan, Zhonghao and Yu, Weijiang and Zheng, Fudan},
   booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
   year={2024},
   organization={Springer}
