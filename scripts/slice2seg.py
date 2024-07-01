@@ -143,32 +143,31 @@ def main():
                         help="saving the predictions for the whole test set.", )
     opt = parser.parse_args()
 
-
     
     if opt.dataset == "synapse-b":
-        run = "2024-02-13T17-09-00_binary_9to2"
+        run = "the name of your experiment"      # for example: 2024-02-13T17-09-00_binary
         print("Evaluate on synapse dataset in binary segmentation manner.")
         opt.config = glob.glob(os.path.join("logs", run, "configs", "*-project.yaml"))[0]
-        opt.ckpt = f"logs/{run}/checkpoints/last.ckpt"
+        opt.ckpt = f"logs/{run}/checkpoints/last.ckpt"      # name of the trained model
         opt.outdir = "outputs/slice2seg-samples-synapse-b"
         dataset = SynapseValidationVolume(num_classes=2)
     elif opt.dataset == "synapse-m":
-        run = "2023-10-05T09-33-54_synapse-KL8-cls14-LabelEmbedding-lr1e-5-10lr-binary-ch0"
+        run = "the name of your experiment" 
         print("Evaluate on synapse dataset in multi-organ segmentation manner.")
         opt.config = glob.glob(os.path.join("logs", run, "configs", "*-project.yaml"))[0]
         opt.ckpt = f"logs/{run}/checkpoints/epoch=107-step=14999.ckpt"
         opt.outdir = "outputs/slice2seg-samples-synapse-m"
         dataset = SynapseValidationVolume(num_classes=9)
     elif opt.dataset == "refuge2-b":
-        run = "2023-09-01T05-12-36_refuge2-ldm-kl-8-concat-mode"
+        run = "the name of your experiment" 
         print("Evaluate on refuge2 dataset in binary segmentation manner.")
         opt.config = glob.glob(os.path.join("logs", run, "configs", "*-project.yaml"))[0]
         # opt.ckpt = "models/ldm/synapse_binary/model.ckpt"
-        opt.ckpt = f"logs/{run}/checkpoints/last.ckpt"
+        opt.ckpt = f"logs/{run}/checkpoints/model.ckpt"
         opt.outdir = "outputs/slice2seg-samples-refuge2-b"
         dataset = REFUGE2Test()
     elif opt.dataset == "sts-3d": 
-        run = "2023-08-24T03-00-34_sts3d-ldm-kl-8-concat-mode"
+        run = "the name of your experiment" 
         print("Evaluate on sts-3d dataset in binary segmentation manner.")
         opt.config = glob.glob(os.path.join("logs", run, "configs", "*-project.yaml"))[0]
         # opt.ckpt = "models/ldm/synapse_binary/model.ckpt"
@@ -176,15 +175,19 @@ def main():
         opt.outdir = "outputs/slice2seg-samples-sts-3d"
         dataset = STS3DTest()
     elif opt.dataset == "cvc":
-        run = "2024-02-19T12-59-39_CVC_ema"
+        run = "the name of your experiment" 
         print("Evaluate on cvc dataset in binary segmentation manner.")
         opt.config = glob.glob(os.path.join("logs", run, "configs", "*-project.yaml"))[0]
-        # opt.ckpt = "models/ldm/synapse_binary/model.ckpt"
-        opt.ckpt = f"logs/{run}/checkpoints/last.ckpt"
+        opt.ckpt = f"logs/{run}/checkpoints/model.ckpt"
         opt.outdir = "outputs/slice2seg-samples-cvc"
         dataset = CVCTest()
     elif opt.dataset == "kseg":
-        pass
+        run = "the name of your experiment" 
+        print("Evaluate on kseg dataset in binary segmentation manner.")
+        opt.config = glob.glob(os.path.join("logs", run, "configs", "*-project.yaml"))[0]
+        opt.ckpt = f"logs/{run}/checkpoints/model.ckpt"
+        opt.outdir = "outputs/slice2seg-samples-cvc"
+        dataset = KSEGTest()
     else:
         raise NotImplementedError(f"Not implement for dataset {opt.dataset}")
 
