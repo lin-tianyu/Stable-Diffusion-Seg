@@ -10,7 +10,7 @@ By [![GitHub User's stars](https://img.shields.io/github/stars/lin-tianyu?label=
 - 06/17: 🎉🥳 **SDSeg** has been accepted by MICCAI2024!  Our paper will be available soon.
 
 ## SDSeg Framework
-<img src="assets/framework.jpg" alt="framework" width="66%" height="66%" />
+<img src="assets/framework-v2.jpg" alt="framework" width="80%" height="80%" />
 
 SDSeg is built on Stable Diffusion (V1), with a downsampling-factor 8 autoencoder, a denoising UNet, and trainable vision encoder (with the same architecture of the encoder in the f=8 autoencoder).
 
