@@ -1,22 +1,24 @@
 # Stable Diffusion Segmentation (SDSeg)
-This is the repo of **Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process**. 
+**Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process**
 
+ <span class="title is-2" style="background: linear-gradient(to right, rgb(255, 0, 0), rgb(0, 255, 0), rgb(0, 0, 0)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;line-height: 1.5;"><b>MICCAI 2024</b></span> \|
+[![Static Badge](https://img.shields.io/badge/_-Project_Page-white?style=social&logo=github)](https://lin-tianyu.github.io/Stable-Diffusion-Seg/) \| [![Static Badge](https://img.shields.io/badge/arxiv-2406.18361-white?style=flat&logo=arxiv)](https://arxiv.org/abs/2406.18361) 
 
 By [![GitHub User's stars](https://img.shields.io/github/stars/lin-tianyu?label=Tianyu%20Lin)](https://lin-tianyu.github.io) | Zhiguang Chen | [![GitHub User's stars](https://img.shields.io/github/stars/zzzyzh?label=Zhonghao%20Yan)](https://github.com/zzzyzh) | [![GitHub User's stars](https://img.shields.io/github/stars/yuweijiang?label=Weijiang%20Yu)](https://github.com/yuweijiang) | Fudan Zheng
 
 
-## News
+## 📣 News
 - 07/14: We release a [![Static Badge](https://img.shields.io/badge/_-Project_Page-white?style=social&logo=github)](https://lin-tianyu.github.io/Stable-Diffusion-Seg/) for you to understand our work better. Check it out!
 - 06/27: The paper of SDSeg has been pre-released on [![Static Badge](https://img.shields.io/badge/arxiv-2406.18361-white?style=flat&logo=arxiv)](https://arxiv.org/abs/2406.18361)
 - 06/17: 🎉🥳 **SDSeg** has been accepted by MICCAI2024!  Our paper will be available soon.
 
-## SDSeg Framework
+## 📌 SDSeg Framework
 <img src="assets/framework-v2.jpg" alt="framework" width="80%" height="80%" />
 
 SDSeg is built on Stable Diffusion (V1), with a downsampling-factor 8 autoencoder, a denoising UNet, and trainable vision encoder (with the same architecture of the encoder in the f=8 autoencoder).
 
 
-## Requirements
+## ⚙️ Requirements
 
 A suitable [conda](https://conda.io/) environment named `sdseg` can be created
 and activated with:
@@ -75,7 +77,7 @@ Then you're good to go!
 </details>
 
 
-## Dataset Settings
+## 🩻 Dataset Settings
 > The image data should be place at `./data/`, while the dataloaders are at `./ldm/data/`
 
 We evaluate SDSeg on the following medical image datasets:
@@ -89,7 +91,7 @@ We evaluate SDSeg on the following medical image datasets:
 | `Kvasir-SEG`   | [This URL](https://datasets.simula.no/kvasir-seg/)                                                        | None                                               |
 
 
-## Model Weights
+## 📦 Model Weights
 
 ### Pretrained Models
 SDSeg uses pre-trained weights from SD to initialize before training.
@@ -109,7 +111,7 @@ bash scripts/download_models_lsun_churches.sh
 ### Trained SDSeg Models
 > The model weights trained on medical image datasets will be available soon.
 
-## Scripts
+## 📄 Scripts
 ### Training Scripts
 
 Take CVC dataset as an example, run
@@ -152,7 +154,7 @@ This will save 10 times of inference results in `./outputs/` folder. To run the 
 
 
 
-## Important Files and Folders to Focus on
+## ‼️ Important Files and Folders to Focus on
 Training related:
 - SDSeg model: `./ldm/models/diffusion/ddpm.py` in the class `LatentDiffusion`.
 - Experiment Configurations: `./configs/latent-diffusion`
@@ -165,7 +167,7 @@ Dataset related:
 - Dataset storation: `./data/`
 - Dataloader files: `./ldm/data/`
 
-## Citation
+## 📝 Citation
 If you find our work useful, please cite:
 ```biblabtex
 @inproceedings{lin2024stable,
@@ -178,7 +180,7 @@ If you find our work useful, please cite:
 ```
 
 
-## TODO List
+## 🔜 TODO List
 
 - [ ] Organizing the inference code. (Toooo redundant right now.)
 - [ ] Reimplement SDSeg in OOP. (Elegance is the key!)
