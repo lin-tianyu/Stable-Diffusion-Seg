@@ -41,7 +41,6 @@ pip install -e .
 
 <summary>Solve GitHub connection issues when downloading <code class="inlinecode">taming-transformers</code> or <code class="inlinecode">clip</code></summary>
 
----
 
 After creating and entering the `sdseg` environment:
 1. create an `src` folder and enter:
@@ -74,7 +73,6 @@ pip install -e .
 
 Then you're good to go!
 
----
 </details>
 
 
@@ -197,5 +195,7 @@ If you find our work useful, please cite:
 - [ ] Release model weights.
 - [ ] Reimplement using diffusers.
 
+## ✨ Star History
 
+[![Star History Chart](https://api.star-history.com/svg?repos=lin-tianyu/Stable-Diffusion-Seg&type=Date)](https://star-history.com/#lin-tianyu/Stable-Diffusion-Seg&Date)
 
