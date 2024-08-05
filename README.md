@@ -194,8 +194,9 @@ If you find our work useful, please cite:
 - [ ] Add README for multi-class segmentation.
 - [ ] Release model weights.
 - [ ] Reimplement using diffusers.
+- [ ] Reduce model checkpoint size (no need to save autoencoder's weights).
 
-## ✨ Star History
+<!-- ## ✨ Star History -->
 
-[![Star History Chart](https://api.star-history.com/svg?repos=lin-tianyu/Stable-Diffusion-Seg&type=Date)](https://star-history.com/#lin-tianyu/Stable-Diffusion-Seg&Date)
+<!-- [![Star History Chart](https://api.star-history.com/svg?repos=lin-tianyu/Stable-Diffusion-Seg&type=Date)](https://star-history.com/#lin-tianyu/Stable-Diffusion-Seg&Date) -->
 
