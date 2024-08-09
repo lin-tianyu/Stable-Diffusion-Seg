@@ -1,8 +1,7 @@
 # Stable Diffusion Segmentation (SDSeg)
-[**Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process**](https://arxiv.org/abs/2406.18361)
+This is the official implementation of [**Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process**](https://arxiv.org/abs/2406.18361) at [<b>MICCAI 2024</b>](https://conferences.miccai.org/2024/en/default.asp).
 
-[<b>MICCAI 2024</b>](https://conferences.miccai.org/2024/en/default.asp) \|
-[![Static Badge](https://img.shields.io/badge/_-Project_Page-white?style=social&logo=github)](https://lin-tianyu.github.io/Stable-Diffusion-Seg/) \| [![Static Badge](https://img.shields.io/badge/arxiv-2406.18361-white?style=flat&logo=arxiv)](https://arxiv.org/abs/2406.18361) 
+[![Static Badge](https://img.shields.io/badge/_-Project_Page-white?style=social&logo=github)](https://lin-tianyu.github.io/Stable-Diffusion-Seg/) \| [![Static Badge](https://img.shields.io/badge/arxiv-2406.18361-white?style=flat&logo=arxiv)](https://arxiv.org/abs/2406.18361) \| [![GitHub Repo stars](https://img.shields.io/github/stars/lin-tianyu/Stable-Diffusion-Seg?label=Code)](https://github.com/lin-tianyu/Stable-Diffusion-Seg/)
 
 By [![GitHub User's stars](https://img.shields.io/github/stars/lin-tianyu?label=Tianyu%20Lin)](https://lin-tianyu.github.io) | Zhiguang Chen | [![GitHub User's stars](https://img.shields.io/github/stars/zzzyzh?label=Zhonghao%20Yan)](https://github.com/zzzyzh) | [![GitHub User's stars](https://img.shields.io/github/stars/yuweijiang?label=Weijiang%20Yu)](https://github.com/yuweijiang) | Fudan Zheng
 
@@ -77,6 +76,7 @@ Then you're good to go!
 
 
 ## 🩻 Dataset Settings
+> [!NOTE]
 > The image data should be place at `./data/`, while the dataloaders are at `./ldm/data/`
 
 We evaluate SDSeg on the following medical image datasets:
@@ -127,7 +127,8 @@ tail -f nohup/experiment_name.log
 
 Also, tensorboard will be on automatically. You can start a tensorboard session with `--logdir=./logs/`
 
-> STORAGE WARNING: A single SDSeg model ckeckpoint is around 5GB. By default, save only the last model and the model with the highest dice score. If you have tons of storage space, feel free to save more models by increasing the `save_top_k` parameter in `main.py`.
+> [!WARNING]
+> A single SDSeg model ckeckpoint is around 5GB. By default, save only the last model and the model with the highest dice score. If you have tons of storage space, feel free to save more models by increasing the `save_top_k` parameter in `main.py`.
 
 
 
