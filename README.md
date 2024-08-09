@@ -1,9 +1,42 @@
-# Stable Diffusion Segmentation (SDSeg)
-This is the official implementation of [**Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process**](https://arxiv.org/abs/2406.18361) at [<b>MICCAI 2024</b>](https://conferences.miccai.org/2024/en/default.asp).
+<p align="center">
+ <h2 align="center">Stable Diffusion Segmentation (SDSeg)</h2>
+ <p align="center">The official implementation of <a href="https://arxiv.org/abs/2406.18361">Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process</a> at <a href="https://conferences.miccai.org/2024/en/default.asp">MICCAI 2024</a>.</p>
+</p>
+  <p align="center">
+    <a href="https://arxiv.org/abs/2406.18361">
+      <img alt="Static Badge" src="https://img.shields.io/badge/_-arxiv-red?style=for-the-badge&logo=arxiv">
+    </a>
+    <a href="https://lin-tianyu.github.io/Stable-Diffusion-Seg/">
+      <img alt="Static Badge" src="https://img.shields.io/badge/_-Project_-green?style=for-the-badge&logo=github">
+    </a>
+    <a href="https://arxiv.org/abs/2406.18361">
+      <img alt="Static Badge" src="https://img.shields.io/badge/_-code-black?style=for-the-badge&logo=github">
+    </a>
+  </p>
 
-[![Static Badge](https://img.shields.io/badge/_-Project_Page-white?style=social&logo=github)](https://lin-tianyu.github.io/Stable-Diffusion-Seg/) \| [![Static Badge](https://img.shields.io/badge/arxiv-2406.18361-white?style=flat&logo=arxiv)](https://arxiv.org/abs/2406.18361) \| [![GitHub Repo stars](https://img.shields.io/github/stars/lin-tianyu/Stable-Diffusion-Seg?label=Code)](https://github.com/lin-tianyu/Stable-Diffusion-Seg/)
+<!-- This is the official implementation of [**Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process**](https://arxiv.org/abs/2406.18361) at [<b>MICCAI 2024</b>](https://conferences.miccai.org/2024/en/default.asp). -->
 
-By [![GitHub User's stars](https://img.shields.io/github/stars/lin-tianyu?label=Tianyu%20Lin)](https://lin-tianyu.github.io) | Zhiguang Chen | [![GitHub User's stars](https://img.shields.io/github/stars/zzzyzh?label=Zhonghao%20Yan)](https://github.com/zzzyzh) | [![GitHub User's stars](https://img.shields.io/github/stars/yuweijiang?label=Weijiang%20Yu)](https://github.com/yuweijiang) | Fudan Zheng
+<!-- [![Static Badge](https://img.shields.io/badge/_-Project_Page-white?style=social&logo=github)](https://lin-tianyu.github.io/Stable-Diffusion-Seg/) \| [![Static Badge](https://img.shields.io/badge/arxiv-2406.18361-white?style=flat&logo=arxiv)](https://arxiv.org/abs/2406.18361) \| [![GitHub Repo stars](https://img.shields.io/github/stars/lin-tianyu/Stable-Diffusion-Seg?label=Code)](https://github.com/lin-tianyu/Stable-Diffusion-Seg/) -->
+  <p align="center">
+    <a href="https://lin-tianyu.github.io">
+      <img alt="Static Badge" src="https://img.shields.io/github/stars/lin-tianyu?label=Tianyu%20Lin">
+    </a>
+    <a href="">
+      <img alt="Static Badge" src="https://img.shields.io/badge/Zhiguang_Chen-_-white?style=social">
+    </a>
+    <a href="https://github.com/zzzyzh">
+      <img alt="Static Badge" src="https://img.shields.io/github/stars/zzzyzh?label=Zhonghao%20Yan">
+    </a>
+    <a href="https://github.com/yuweijiang">
+      <img alt="Static Badge" src="https://img.shields.io/github/stars/yuweijiang?label=Weijiang%20Yu">
+    </a>
+    <a href="">
+      <img alt="Static Badge" src="https://img.shields.io/badge/Fudan_Zheng-_-white?style=social">
+    </a>
+    <br />
+  </p>
+
+<!-- [![GitHub User's stars](https://img.shields.io/github/stars/lin-tianyu?label=Tianyu%20Lin)](https://lin-tianyu.github.io) | Zhiguang Chen | [![GitHub User's stars](https://img.shields.io/github/stars/zzzyzh?label=Zhonghao%20Yan)](https://github.com/zzzyzh) | [![GitHub User's stars](https://img.shields.io/github/stars/yuweijiang?label=Weijiang%20Yu)](https://github.com/yuweijiang) | Fudan Zheng -->
 
 
 
