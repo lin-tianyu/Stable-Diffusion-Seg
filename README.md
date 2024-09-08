@@ -144,6 +144,9 @@ tail -f nohup/experiment_name.log
 
 Also, tensorboard will be on automatically. You can start a tensorboard session with `--logdir=./logs/`
 
+> [!NOTE]
+> If you want to use parallel training, `trainer_config["accelerator"] = "gpu"` should be changed to `trainer_config["accelerator"] = "ddp"`. However, parallel training is not recommended. 
+
 > [!WARNING]
 > A single SDSeg model ckeckpoint is around 5GB. By default, save only the last model and the model with the highest dice score. If you have tons of storage space, feel free to save more models by increasing the `save_top_k` parameter in `main.py`.
 
