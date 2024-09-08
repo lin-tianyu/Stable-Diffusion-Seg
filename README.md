@@ -192,7 +192,7 @@ If you find our work useful, please cite:
 ```bibtex
 @article{lin2024stable,
   title={Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process},
-  author={Lin, Tianyu and Chen, Zhiguang and Yan, Zhonghao and Zheng, Fudan and Yu, Weijiang},
+  author={Lin, Tianyu and Chen, Zhiguang and Yan, Zhonghao and Yu, Weijiang and Zheng, Fudan},
   journal={arXiv preprint arXiv:2406.18361},
   year={2024}
 }
