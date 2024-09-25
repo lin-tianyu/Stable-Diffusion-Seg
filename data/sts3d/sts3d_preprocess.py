@@ -110,7 +110,7 @@ if __name__ == "__main__":
         f.close()
 
     """ for valtest: test -> volumes """
-    with open("valtest.txt", "w+") as f:
+    with open(os.path.join(root_path, "valtest.txt"), "w+") as f:
         val_path = glob.glob(os.path.join(root_labelled, "image", "*_001*_*"))
         print(val_path)
         for idx, path in tqdm(enumerate(val_path), desc="processing unlabeled data"):
