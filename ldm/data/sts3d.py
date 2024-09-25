@@ -20,11 +20,12 @@ class STS3DBase(Dataset):
         - `segmentation` is for the diffusion training stage (range binary -1 and 1)
         - `image` is for conditional signal to guided final seg-map (range -1 to 1)
     """
-    def __init__(self, data_root, size=256, interpolation="nearest", mode=None):
+    def __init__(self, data_root, size=256, interpolation="nearest", mode=None, num_classes=2):
         self.data_root = data_root
         # self.data_paths = glob.glob(os.path.join(self.data_root, "*.png"))  # seg map, img slice with *.npy postfix
 
         self.mode = mode
+        self.num_classes = num_classes
         assert mode in ["train", "val", "test"]
         if mode == "train":
             with open(os.path.join(ROOT_PATH, "splits", "labeled.txt"), 'r') as f:

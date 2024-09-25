@@ -108,7 +108,7 @@ lightning:
       params:
         batch_frequency: 2000
         max_images: 8
-        increase_log_steps: True
+        increase_log_steps: False
         log_dice_frequency: 2000
 
 
