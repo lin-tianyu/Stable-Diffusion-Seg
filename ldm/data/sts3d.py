@@ -87,6 +87,7 @@ class STS3DBase(Dataset):
         segmentation = np.array(segmentation.permute(1, 2, 0))
         image = np.array(image.permute(1, 2, 0))
         segmentation = np.where(segmentation > 0.5, 1, 0)   
+        example["class id"]= np.array([-1])
         example["segmentation"] = ((segmentation * 2) - 1).astype(np.float32)   # range: binary -1 and 1
         example["image"] = ((image * 2) - 1).astype(np.float32)     # range from -1 to 1, np.float32
         return example
