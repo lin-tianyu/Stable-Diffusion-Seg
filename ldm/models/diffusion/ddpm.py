@@ -1510,33 +1510,33 @@ class LatentDiffusion(DDPM):
 
 
                             # # log non-empty examples for debugging
-                            # if idx == (image.shape[2] // 3) * 2:
-                            #     slice_label = np.expand_dims(slice_label, 2).repeat(3, axis=2)  # H W C
-                            #     # slice_label = zoom(slice_label, (256 / x, 256 / y, 1), order=0)
-                            #     if self.num_classes > 2:
-                            #         for cls in range(0, self.num_classes):
-                            #             encoder_posterior = self.encode_first_stage(
-                            #                 torch.from_numpy(slice_label == cls).unsqueeze(0).permute((0, 3, 1, 2)).half().cuda()
-                            #             )
-                            #             label_latent = self.get_first_stage_encoding(encoder_posterior).detach()
-                            #             label_latent_list.append(label_latent)  # 1 4 32 32
-                            #     else:
-                            #         encoder_posterior = self.encode_first_stage(
-                            #             torch.from_numpy(slice_label).unsqueeze(0).permute((0, 3, 1, 2)).half().cuda()
-                            #         )
-                            #         label_latent = self.get_first_stage_encoding(encoder_posterior).detach()
-                            #         label_latent_list.append(label_latent)  # 1 4 32 32
+                            if idx % (image.shape[2] // 8) == 0:
+                                slice_label = np.expand_dims(slice_label, 2).repeat(3, axis=2)  # H W C
+                                # slice_label = zoom(slice_label, (256 / x, 256 / y, 1), order=0)
+                                if self.num_classes > 2:
+                                    for cls in range(0, self.num_classes):
+                                        encoder_posterior = self.encode_first_stage(
+                                            torch.from_numpy(slice_label == cls).unsqueeze(0).permute((0, 3, 1, 2)).half().cuda()
+                                        )
+                                        label_latent = self.get_first_stage_encoding(encoder_posterior).detach()
+                                        label_latent_list.append(label_latent)  # 1 4 32 32
+                                else:
+                                    encoder_posterior = self.encode_first_stage(
+                                        torch.from_numpy(slice_label).unsqueeze(0).permute((0, 3, 1, 2)).half().cuda()
+                                    )
+                                    label_latent = self.get_first_stage_encoding(encoder_posterior).detach()
+                                    label_latent_list.append(label_latent)  # 1 4 32 32
                                     
-                            #     samples_latent_list.extend(samples_pred[0:])    # 1 4 32 32
-                            #     label_image_list.append(
-                            #         torch.from_numpy(colorize(slice_label, num_classes=self.num_classes))
-                            #         .unsqueeze(0).permute(0, 3, 1, 2))    # 1 3 256 256
-                            #     samples_image_list.append(
-                            #         torch.from_numpy(colorize(out, num_classes=self.num_classes))
-                            #         .unsqueeze(0).permute(0, 3, 1, 2))  # 1 3 256 256
+                                samples_latent_list.extend(samples_pred[0:])    # 1 4 32 32
+                                label_image_list.append(
+                                    torch.from_numpy(colorize(slice_label, num_classes=self.num_classes))
+                                    .unsqueeze(0).permute(0, 3, 1, 2))    # 1 3 256 256
+                                samples_image_list.append(
+                                    torch.from_numpy(colorize(out, num_classes=self.num_classes))
+                                    .unsqueeze(0).permute(0, 3, 1, 2))  # 1 3 256 256
                                 
-                            #     samples_logits_list.append(torch.from_numpy(out_p * 255).unsqueeze(0).permute(0, 3, 1, 2))
-                            #     samples_cond_list.append(torch.from_numpy((slice+1)/2*255).unsqueeze(0).unsqueeze(1).repeat((1, 3, 1, 1)))
+                                samples_logits_list.append(torch.from_numpy(out_p * 255).unsqueeze(0).permute(0, 3, 1, 2))
+                                samples_cond_list.append(torch.from_numpy((slice+1)/2*255).unsqueeze(0).unsqueeze(1).repeat((1, 3, 1, 1)))
 
                             pbar_sub.update()
                         pbar_sub.close()
