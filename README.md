@@ -26,6 +26,10 @@
 
 ## 📣 News
 > ⚠️⚠️⚠️ WARNING: for previous users, please set `increase_log_steps: False` in the `*.yaml` setting files, this will reduce meaningless logging process and increase training speed!!!
+- 09/29: The MICCAI poster of SDSeg is released: [![Static Badge](https://img.shields.io/badge/MICCAI-Poster-_?style=flat-square&logo=googledocs)](https://drive.google.com/file/d/1nMMQlvNaK8yongQhBSrrbHvMLPI9868j/view?usp=drive_link) See you in Marrakesh!
+
+
+
 - 07/14: We release a [![Static Badge](https://img.shields.io/badge/_-Project_Page-white?style=social&logo=github)](https://lin-tianyu.github.io/Stable-Diffusion-Seg/) for you to understand our work better. Check it out!
 - 06/27: The paper of SDSeg has been pre-released on [![Static Badge](https://img.shields.io/badge/arxiv-2406.18361-white?style=flat&logo=arxiv)](https://arxiv.org/abs/2406.18361)
 - 06/17: 🎉🥳 **SDSeg** has been accepted by MICCAI2024!  Our paper will be available soon.
