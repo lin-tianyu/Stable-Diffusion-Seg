@@ -3,7 +3,7 @@
  <p align="center">The official implementation of <a href="https://arxiv.org/abs/2406.18361">Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process</a> at <a href="https://conferences.miccai.org/2024/en/default.asp">MICCAI 2024</a>.</p>
 </p>
   <p align="center">
-    <a href="https://arxiv.org/abs/2406.18361"><img alt="Static Badge" src="https://img.shields.io/badge/_-arxiv-red?style=for-the-badge&logo=arxiv"></a>
+    <a href="https://link.springer.com/chapter/10.1007/978-3-031-72111-3_62"><img alt="Static Badge" src="https://img.shields.io/badge/_-Paper-red?style=for-the-badge&logo=googledocs"></a>
     <a href="https://lin-tianyu.github.io/Stable-Diffusion-Seg/"><img alt="Static Badge" src="https://img.shields.io/badge/_-Project_-green?style=for-the-badge&logo=github"></a>
     <a href="https://arxiv.org/abs/2406.18361"><img alt="Static Badge" src="https://img.shields.io/badge/_-code-black?style=for-the-badge&logo=github"></a>
   </p>
@@ -26,6 +26,7 @@
 
 ## 📣 News
 > ⚠️⚠️⚠️ WARNING: for previous users, please set `increase_log_steps: False` in the `*.yaml` setting files, this will reduce meaningless logging process and increase training speed!!!
+- 10/07: The final published version of the paper is available! See: [![Static Badge](https://img.shields.io/badge/MICCAI-Paper-_?style=flat-square&logo=googledocs)](https://link.springer.com/chapter/10.1007/978-3-031-72111-3_62)
 - 09/29: The MICCAI poster of SDSeg is released: [![Static Badge](https://img.shields.io/badge/MICCAI-Poster-_?style=flat-square&logo=googledocs)](https://drive.google.com/file/d/1nMMQlvNaK8yongQhBSrrbHvMLPI9868j/view?usp=drive_link) See you in Marrakesh!
 
 
@@ -195,20 +196,19 @@ Dataset related:
 ## 📝 Citation
 If you find our work useful, please cite:
 ```bibtex
-@article{lin2024stable,
-  title={Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process},
-  author={Lin, Tianyu and Chen, Zhiguang and Yan, Zhonghao and Yu, Weijiang and Zheng, Fudan},
-  journal={arXiv preprint arXiv:2406.18361},
-  year={2024}
-}
-```
-```bibtex
-@inproceedings{lin2024stable,
-  title={Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process},
-  author={Lin, Tianyu and Chen, Zhiguang and Yan, Zhonghao and Yu, Weijiang and Zheng, Fudan},
-  booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
-  year={2024},
-  organization={Springer}
+@InProceedings{lin2024stable,
+author="Lin, Tianyu
+and Chen, Zhiguang
+and Yan, Zhonghao
+and Yu, Weijiang
+and Zheng, Fudan",
+title="Stable Diffusion Segmentation for Biomedical Images with Single-Step Reverse Process",
+booktitle="Medical Image Computing and Computer Assisted Intervention -- MICCAI 2024",
+year="2024",
+publisher="Springer Nature Switzerland",
+address="Cham",
+pages="656--666",
+isbn="978-3-031-72111-3"
 }
 ```
 
