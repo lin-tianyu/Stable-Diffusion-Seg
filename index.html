@@ -113,12 +113,12 @@
 
               <!-- Arxiv PDF link -->
               <span class="link-block">
-                <a href="https://arxiv.org/pdf/2406.18361.pdf" target="_blank"
+                <a href="https://link.springer.com/chapter/10.1007/978-3-031-72111-3_62" target="_blank"
                   class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                     <i class="fas fa-file-pdf"></i>
                   </span>
-                  <span>Arxiv Paper</span>
+                  <span>Paper</span>
                 </a>
               </span>
 
@@ -163,7 +163,8 @@
       </div>
       <p>
         🌟 <b><u>Stable</u></b> not only shows that SDSeg is built on Stable Diffusion but also indicates its remarkable stability.<br>
-        🌟 SDSeg only require a <b>single-step reverse process</b> to generate segmentation results.
+        🌟 SDSeg only requires a <b>single-step reverse process</b> to generate segmentation results.<br>
+        🌟 SDSeg has remarkable <b>stability</b> and doesn't need to sample multiple times for average.
         
       </p>
     </div>
@@ -185,8 +186,9 @@
           <div class="content">
             <h4 class="title is-5" style="text-align: center;">🔒 Challenges</h4>
             <p>
-            (1) <b>Diffusion process in pixel-space</b> brings computing resource-consuming issue during training stage.<br>
-            (2) <b>Multi-step reverse process</b> and <b>multiple-sample average scheme</b> brings time-consuming issue during inference stage.
+            (1) <b>Pixel-level Diffusion process</b> is computing resource-consuming during training.<br>
+            <!-- (1) <b>Diffusion process in pixel-space</b> brings computing resource-consuming issue during training stage.<br> -->
+            (2) <b>Multi-step reverse process</b> and <b>multiple-sample average scheme</b> are time-consuming during inference.
             </p>
           </div>
         </div>
@@ -198,8 +200,11 @@
             <div class="column content">
               <p>
               <!-- <br> -->
-              (1) Building our model based on Stable Diffusion model, which conduct diffusion process on a much smaller <b>latent space</b>.<br>
-              (2) Constructing a <b>single-step reverse process</b> with strong <b>stability among different initial noise</b> to speed up inference.
+              (1) Using <b>Latent-level Diffusion</b> model (Stable Diffusion, SD).<br>
+              Also, SD's Autoencoder can generalize to segmentation maps. <b> No fintune needed.</b><br>
+              <!-- (1) Building our model based on Stable Diffusion model, which conduct diffusion process on a much smaller <b>latent space</b>.<br> -->
+              (2) Designing a <b>single-step reverse process</b> with strong <b>stability against initial noise</b>.
+              <!-- (2) Constructing a <b>single-step reverse process</b> with strong <b>stability among different initial noise</b> to speed up inference. -->
               </p>
             </div>
           </div>
@@ -349,13 +354,20 @@ couldn’t capture enough meaningful semantic features for segmentation. During 
     <div class="container is-max-desktop content">
       <h2 class="title">BibTex</h2>
       <pre><code>
-        @inproceedings{lin2024stable,
-          title={Stable Diffusion Segmentation for Biomedical Images with Single-step Reverse Process},
-          author={Lin, Tianyu and Chen, Zhiguang and Yan, Zhonghao and Yu, Weijiang and Zheng, Fudan},
-          booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
-          year={2024},
-          organization={Springer}
-        }        
+        @InProceedings{lin2024stable,
+          author="Lin, Tianyu
+            and Chen, Zhiguang
+            and Yan, Zhonghao
+            and Yu, Weijiang
+            and Zheng, Fudan",
+          title="Stable Diffusion Segmentation for Biomedical Images with Single-Step Reverse Process",
+          booktitle="Medical Image Computing and Computer Assisted Intervention -- MICCAI 2024",
+          year="2024",
+          publisher="Springer Nature Switzerland",
+          address="Cham",
+          pages="656--666",
+          isbn="978-3-031-72111-3"
+          }      
       </code></pre>
     </div>
   </section>

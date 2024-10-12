@@ -26,7 +26,7 @@
 
 ## 📣 News
 > ⚠️⚠️⚠️ WARNING: for previous users, please set `increase_log_steps: False` in the `*.yaml` setting files, this will reduce meaningless logging process and increase training speed!!!
-- 10/07: The final published version of the paper is available! See: [![Static Badge](https://img.shields.io/badge/MICCAI-Paper-_?style=flat-square&logo=googledocs)](https://link.springer.com/chapter/10.1007/978-3-031-72111-3_62)
+- 10/07: The final published version of the paper is available! See: [![Static Badge](https://img.shields.io/badge/MICCAI-Paper-red?style=flat-square&logo=googledocs)](https://link.springer.com/chapter/10.1007/978-3-031-72111-3_62)
 - 09/29: The MICCAI poster of SDSeg is released: [![Static Badge](https://img.shields.io/badge/MICCAI-Poster-_?style=flat-square&logo=googledocs)](https://drive.google.com/file/d/1nMMQlvNaK8yongQhBSrrbHvMLPI9868j/view?usp=drive_link) See you in Marrakesh!
 
 
@@ -198,10 +198,10 @@ If you find our work useful, please cite:
 ```bibtex
 @InProceedings{lin2024stable,
 author="Lin, Tianyu
-and Chen, Zhiguang
-and Yan, Zhonghao
-and Yu, Weijiang
-and Zheng, Fudan",
+  and Chen, Zhiguang
+  and Yan, Zhonghao
+  and Yu, Weijiang
+  and Zheng, Fudan",
 title="Stable Diffusion Segmentation for Biomedical Images with Single-Step Reverse Process",
 booktitle="Medical Image Computing and Computer Assisted Intervention -- MICCAI 2024",
 year="2024",
