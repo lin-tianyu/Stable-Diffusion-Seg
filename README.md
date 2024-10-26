@@ -130,8 +130,6 @@ For pre-trained wights of the denoising UNet, run
 bash scripts/download_models_lsun_churches.sh
 ```
 
-### Trained SDSeg Models
-> The model weights trained on medical image datasets will be available soon.
 
 ## 📄 Scripts
 ### Training Scripts
@@ -215,12 +213,11 @@ isbn="978-3-031-72111-3"
 
 ## 🔜 TODO List
 
-- [ ] Organizing the inference code. (Toooo redundant right now.)
-- [ ] Reimplement SDSeg in OOP. (Elegance is the key!)
 - [ ] Add README for multi-class segmentation.
-- [ ] Release model weights.
-- [ ] Reimplement using diffusers.
+- [ ] Reimplement SDSeg in OOP. (Elegance is the key!)
+- [ ] Organizing the inference code. (Toooo redundant right now.)
 - [ ] Reduce model checkpoint size (no need to save autoencoder's weights).
+- [ ] Reimplement using diffusers.
 
 <!-- ## ✨ Star History -->
 
