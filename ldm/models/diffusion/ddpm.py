@@ -1,9 +1,8 @@
 """
 The original version of SDSeg, built by disgustingly modify `LatentDiffusion`. Err.
-
 I want to reimplement SDSeg using OOP! Elegance is the key!
 
-SDSeg <-- LatentDiffusion <-- DDPM
+    SDSeg <-- LatentDiffusion <-- DDPM
 
 Tianyu
 Oct 31, 2024
@@ -26,7 +25,7 @@ from tqdm import tqdm
 from torchvision.utils import make_grid
 from torch.utils.data import DataLoader
 from scipy.ndimage import zoom
-
+from pytorch_lightning.utilities.distributed import rank_zero_only
 from PIL import Image
 from ldm.util import log_txt_as_img, exists, default, ismap, isimage, mean_flat, count_params, instantiate_from_config
 from ldm.modules.ema import LitEma
@@ -157,7 +156,7 @@ class DDPM(pl.LightningModule):
 
         # calculations for posterior q(x_{t-1} | x_t, x_0)
         posterior_variance = (1 - self.v_posterior) * betas * (1. - alphas_cumprod_prev) / (
-                1. - alphas_cumprod) + self.v_posterior * betas
+                    1. - alphas_cumprod) + self.v_posterior * betas
         # above: equal to 1. / (1. / (1. - alpha_cumprod_tm1) + alpha_t / beta_t)
         self.register_buffer('posterior_variance', to_torch(posterior_variance))
         # below: log calculation clipped because the posterior variance is 0 at the beginning of the diffusion chain
@@ -169,7 +168,7 @@ class DDPM(pl.LightningModule):
 
         if self.parameterization == "eps":
             lvlb_weights = self.betas ** 2 / (
-                    2 * self.posterior_variance * to_torch(alphas) * (1 - self.alphas_cumprod))
+                        2 * self.posterior_variance * to_torch(alphas) * (1 - self.alphas_cumprod))
         elif self.parameterization == "x0":
             lvlb_weights = 0.5 * np.sqrt(torch.Tensor(alphas_cumprod)) / (2. * 1 - torch.Tensor(alphas_cumprod))
         else:
@@ -337,12 +336,12 @@ class DDPM(pl.LightningModule):
         return (extract_into_tensor(self.sqrt_alphas_cumprod, t, x_start.shape) * x_start +
                 extract_into_tensor(self.sqrt_one_minus_alphas_cumprod, t, x_start.shape) * noise)
 
-    def get_loss(self, pred, target, mean=True, type=None):
-        if type == 'l1' or self.loss_type == 'l1':
+    def get_loss(self, pred, target, mean=True):
+        if self.loss_type == 'l1':
             loss = (target - pred).abs()
             if mean:
                 loss = loss.mean()
-        elif type == 'l2' or self.loss_type == 'l2':
+        elif self.loss_type == 'l2':
             if mean:
                 loss = torch.nn.functional.mse_loss(target, pred)
             else:
@@ -365,23 +364,18 @@ class DDPM(pl.LightningModule):
         else:
             raise NotImplementedError(f"Paramterization {self.parameterization} not yet supported")
 
-        log_prefix = 'train' if self.training else 'val'  # set prefix for tensorboard
+        loss = self.get_loss(model_out, target, mean=False).mean(dim=[1, 2, 3])
 
-        # 2. get original noise regression loss
-        loss = self.get_loss(model_out, target, mean=False).mean(dim=[1, 2, 3])  # shape: (b,)
+        log_prefix = 'train' if self.training else 'val'
 
-        # 3. get `loss_simple` and record
         loss_dict.update({f'{log_prefix}/loss_simple': loss.mean()})
         loss_simple = loss.mean() * self.l_simple_weight
 
-        # 4. get `loss_vlb` and record
         loss_vlb = (self.lvlb_weights[t] * loss).mean()
         loss_dict.update({f'{log_prefix}/loss_vlb': loss_vlb})
 
-        # 5. get final loss by weighting `loss_simple` and `loss_vlb`
-        # loss = loss.mean() * l_simple_weight + (lvlb_weights[t] * loss).mean() * original_elbo_weight
-        #   original_elbo_weight==0, l_simple_weight==1 --> loss = loss.mean()
         loss = loss_simple + self.original_elbo_weight * loss_vlb
+
         loss_dict.update({f'{log_prefix}/loss': loss})
 
         return loss, loss_dict
@@ -496,7 +490,6 @@ class DDPM(pl.LightningModule):
 
 class LatentDiffusion(DDPM):
     """main class"""
-
     def __init__(self,
                  first_stage_config,
                  cond_stage_config,
@@ -523,7 +516,6 @@ class LatentDiffusion(DDPM):
         #     conditioning_key = None
         ckpt_path = kwargs.pop("ckpt_path", None)
         ignore_keys = kwargs.pop("ignore_keys", [])
-        # print(kwargs)
         super().__init__(conditioning_key=conditioning_key, *args, **kwargs)
         self.concat_mode = concat_mode
         self.cond_stage_trainable = cond_stage_trainable
@@ -760,13 +752,13 @@ class LatentDiffusion(DDPM):
                 elif cond_key == 'class_label':
                     xc = batch
                 else:
-                    xc = super().get_input(batch, cond_key).to(self.device)  # b, 3, 256, 256
+                    xc = super().get_input(batch, cond_key).to(self.device)
             else:
                 xc = x
             if not self.cond_stage_trainable or force_c_encode:
                 if isinstance(xc, dict) or isinstance(xc, list):
                     # import pudb; pudb.set_trace()
-                    c = self.get_learned_conditioning(xc)  # b, 4, 32, 32
+                    c = self.get_learned_conditioning(xc)
                 else:
                     c = self.get_learned_conditioning(xc.to(self.device))
             else:
@@ -791,7 +783,6 @@ class LatentDiffusion(DDPM):
             out.extend([x, xrec])
         if return_original_cond:
             out.append(xc)
-
         return out
 
     @torch.no_grad()
@@ -983,17 +974,16 @@ class LatentDiffusion(DDPM):
         return [rescale_bbox(b) for b in bboxes]
 
     def apply_model(self, x_noisy, t, cond, return_ids=False):
-        # all using dict input
+
         if isinstance(cond, dict):
             # hybrid case, cond is exptected to be a dict
             pass
-        else:   # useless
+        else:
             if not isinstance(cond, list):
                 cond = [cond]
             key = 'c_concat' if self.model.conditioning_key == 'concat' else 'c_crossattn'
             cond = {key: cond}
 
-        # seems not useful?
         if hasattr(self, "split_input_params"):
             assert len(cond) == 1  # todo can only deal with one conditioning atm
             assert not return_ids
@@ -1351,7 +1341,7 @@ class LatentDiffusion(DDPM):
             ddim_sampler = DDIMSampler(self)
             shape = (self.channels, self.image_size, self.image_size)
             samples, intermediates = ddim_sampler.sample(ddim_steps, batch_size,
-                                                         shape, cond, verbose=False, **kwargs)
+                                                        shape, cond, verbose=False, **kwargs)
 
         else:
             samples, intermediates = self.sample(cond=cond, batch_size=batch_size,

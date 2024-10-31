@@ -3,6 +3,9 @@ Brand new version of SDSeg! It is 100% the same as the original one, but re-writ
 
 """
 
+import sys
+import os
+
 import torch
 import torch.nn as nn
 import numpy as np
@@ -25,7 +28,9 @@ from ldm.modules.distributions.distributions import normal_kl, DiagonalGaussianD
 from ldm.models.autoencoder import VQModelInterface, IdentityFirstStage, AutoencoderKL
 from ldm.modules.diffusionmodules.util import make_beta_schedule, extract_into_tensor, noise_like
 from ldm.models.diffusion.ddim import DDIMSampler
-
+from ldm.models.diffusion.plms import PLMSSampler
+from scripts.slice2seg import prepare_for_first_stage, dice_score, iou_score
+from ldm.data.synapse import colorize
 
 __conditioning_keys__ = {'concat': 'c_concat',
                          'crossattn': 'c_crossattn',
@@ -113,7 +118,6 @@ class DDPM(pl.LightningModule):
         self.logvar = torch.full(fill_value=logvar_init, size=(self.num_timesteps,))
         if self.learn_logvar:
             self.logvar = nn.Parameter(self.logvar, requires_grad=True)
-
 
     def register_schedule(self, given_betas=None, beta_schedule="linear", timesteps=1000,
                           linear_start=1e-4, linear_end=2e-2, cosine_s=8e-3):
@@ -462,7 +466,7 @@ class LatentDiffusion(DDPM):
         self.instantiate_cond_stage(cond_stage_config)
         self.cond_stage_forward = cond_stage_forward
         self.clip_denoised = False
-        self.bbox_tokenizer = None  
+        self.bbox_tokenizer = None
 
         self.restarted_from_ckpt = False
         if ckpt_path is not None:
@@ -794,7 +798,7 @@ class LatentDiffusion(DDPM):
                 z = z.view((z.shape[0], -1, ks[0], ks[1], z.shape[-1]))  # (bn, nc, ks[0], ks[1], L )
 
                 # 2. apply model loop over last dim
-                if isinstance(self.first_stage_model, VQModelInterface):  
+                if isinstance(self.first_stage_model, VQModelInterface):
                     output_list = [self.first_stage_model.decode(z[:, :, :, :, i],
                                                                  force_not_quantize=predict_cids or force_not_quantize)
                                    for i in range(z.shape[-1])]
@@ -902,7 +906,7 @@ class LatentDiffusion(DDPM):
 
         if hasattr(self, "split_input_params"):
             assert len(cond) == 1  # todo can only deal with one conditioning atm
-            assert not return_ids  
+            assert not return_ids
             ks = self.split_input_params["ks"]  # eg. (128, 128)
             stride = self.split_input_params["stride"]  # eg. (64, 64)
 
@@ -1217,7 +1221,7 @@ class LatentDiffusion(DDPM):
     @torch.no_grad()
     def sample(self, cond, batch_size=16, return_intermediates=False, x_T=None,
                verbose=True, timesteps=None, quantize_denoised=False,
-               mask=None, x0=None, shape=None,**kwargs):
+               mask=None, x0=None, shape=None, **kwargs):
         if shape is None:
             shape = (batch_size, self.channels, self.image_size, self.image_size)
         if cond is not None:
@@ -1233,17 +1237,17 @@ class LatentDiffusion(DDPM):
                                   mask=mask, x0=x0)
 
     @torch.no_grad()
-    def sample_log(self,cond,batch_size,ddim, ddim_steps,**kwargs):
+    def sample_log(self, cond, batch_size, ddim, ddim_steps, **kwargs):
 
         if ddim:
             ddim_sampler = DDIMSampler(self)
             shape = (self.channels, self.image_size, self.image_size)
-            samples, intermediates =ddim_sampler.sample(ddim_steps,batch_size,
-                                                        shape,cond,verbose=False,**kwargs)
+            samples, intermediates = ddim_sampler.sample(ddim_steps, batch_size,
+                                                        shape, cond, verbose=False, **kwargs)
 
         else:
             samples, intermediates = self.sample(cond=cond, batch_size=batch_size,
-                                                 return_intermediates=True,**kwargs)
+                                                 return_intermediates=True, **kwargs)
 
         return samples, intermediates
 
@@ -1391,6 +1395,36 @@ class LatentDiffusion(DDPM):
         x = nn.functional.conv2d(x, weight=self.colorize)
         x = 2. * (x - x.min()) / (x.max() - x.min()) - 1.
         return x
+    
+class SDSeg(LatentDiffusion):
+    def __init__(self, first_stage_config, cond_stage_config, num_timesteps_cond=None, cond_stage_key="image", cond_stage_trainable=False, concat_mode=True, cond_stage_forward=None, conditioning_key=None, scale_factor=1, scale_by_std=False, *args, **kwargs):
+        super().__init__(first_stage_config, cond_stage_config, num_timesteps_cond, cond_stage_key, cond_stage_trainable, concat_mode, cond_stage_forward, conditioning_key, scale_factor, scale_by_std, *args, **kwargs)
+    def init_from_ckpt():
+        pass
+    def training_step():
+        pass
+    def on_train_batch_start():
+        pass
+    def get_denoise_row_from_list():
+        pass
+    def get_input():
+        pass
+    def shared_step():
+        pass
+    def forward():
+        pass
+    def get_loss_seg_regression():
+        pass
+    def p_losses():
+        pass
+    def log_dice():
+        pass
+    def prepare_latent_to_log():
+        pass
+    def log_images():
+        pass
+    def configure_optimizers():
+        pass
 
 
 class DiffusionWrapper(pl.LightningModule):
