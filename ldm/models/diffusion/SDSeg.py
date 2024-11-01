@@ -1746,6 +1746,7 @@ class SDSeg(LatentDiffusion):
                                         x_samples_ddim *= -1    # for softmax
                                     x_samples_ddim = torch.mean(x_samples_ddim, dim=1, keepdim=False)    # b h w
                                     out[:, :, cls] = x_samples_ddim[0, ...]
+                                out_p = out.softmax(dim=2)
                                 out = out.softmax(dim=2).argmax(dim=2, keepdim=True).repeat(1, 1, 3).numpy()    # h w c==3
                             else:
                                 x_samples_ddim = self.decode_first_stage(samples_pred[0])

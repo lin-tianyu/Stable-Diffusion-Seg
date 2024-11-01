@@ -18,25 +18,25 @@ from PIL import Image
 
 
 TEST_VOLUME = [
+    "0001",
+    "0002",
+    "0003",
+    "0004",
     "0008",
     "0022",
-    "0038",
-    "0036",
-    "0032",
-    "0002",
-    "0029",
-    "0003",
-    "0001",
-    "0004",
     "0025",
+    "0029",
+    "0032",
     "0035",
+    "0036",
+    "0038",
 ]  # 12 testing volume, following `TransUnet`, etc.
 
 
 
 def generate_vol_txt():
     dataset = "Abdomen"
-    imgpath = sorted(glob.glob(os.path.join(root_path, dataset, 'Rawdata/Training/img', '*.nii.gz')))
+    imgpath = sorted(glob.glob(os.path.join(root_path, dataset, 'RawData/Training/img', '*.nii.gz')))
 
     test_imgpath = list(filter(lambda x:
                                x if "".join(list(filter(str.isdigit, x.split('/')[-1].split('.')[0]))) in TEST_VOLUME
@@ -71,6 +71,9 @@ def generate_npz(img_path, test_vol_path, mode="all"):
             train_set = "train"
         else:
             train_set = "test"
+
+        if not os.path.exists(train_set):
+            os.mkdir(train_set)
 
         min_edge = list()
         slice_counter = 0
@@ -139,8 +142,8 @@ if __name__ == '__main__':
     # ../dataset: .nii.gz files
     # test_path = os.path.join(root_path, 'dataset', dataset, 'Rawdata', 'Testing', 'img')
     train_path = dict(
-        image=os.path.join(root_path, dataset, 'Rawdata', 'Training', 'img'),
-        label=os.path.join(root_path, dataset, 'Rawdata', 'Training', 'label')
+        image=os.path.join(root_path, dataset, 'RawData', 'Training', 'img'),
+        label=os.path.join(root_path, dataset, 'RawData', 'Training', 'label')
     )
 
     # ../data: .npz files
@@ -154,4 +157,6 @@ if __name__ == '__main__':
     # test_image_path = sorted(glob.glob(test_path + '/*.nii.gz'))
 
     test_vol_path = generate_vol_txt()
+    # print(train_image_path)
+    # print(test_vol_path)
     generate_npz(train_image_path, test_vol_path, mode="all")

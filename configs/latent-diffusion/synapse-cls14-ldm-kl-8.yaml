@@ -109,8 +109,8 @@ lightning:
         batch_frequency: 5000
         max_images: 8
         increase_log_steps: False
-        log_dice_frequency: 2500   # debug: 5; running: 5000
-        log_first_step: True
+        log_dice_frequency: 5   # debug: 5; running: 5000
+        log_first_step: false
 
 
   trainer:

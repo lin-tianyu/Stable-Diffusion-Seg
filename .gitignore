@@ -3,6 +3,7 @@
 
 # compilation and distribution
 __pycache__/
+**/__pycache__
 _ext
 *.pyc
 *.pyd
@@ -16,6 +17,15 @@ wheels/
 # dataset package
 *.zip
 *.rar
+data/cvc
+data/kseg
+data/refuge2
+data/sts3d/labelled/
+data/sts3d/data/
+data/synapse/Abdomen/
+data/synapse/train/
+data/synapse/test/
+data/synapse/test_vol/
 
 # pytorch/python/numpy formats
 *.pth
