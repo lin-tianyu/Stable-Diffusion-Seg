@@ -1499,7 +1499,7 @@ class SDSeg(LatentDiffusion):
             if self.scale_by_std:
                 assert self.scale_factor == 1., 'rather not use custom rescaling and std-rescaling simultaneously'
                 # set rescale weight to 1./std of encodings
-                x = super().get_input(batch, self.first_stage_key)
+                x = DDPM.get_input(self, batch, self.first_stage_key)   # fk Multi-Inheritance!!! this is so ugly
                 x = x.to(self.device)
                 encoder_posterior = self.encode_first_stage(x)
                 z = self.get_first_stage_encoding(encoder_posterior).detach()   # range roughly in (-18, 18)
@@ -1533,7 +1533,7 @@ class SDSeg(LatentDiffusion):
     @torch.no_grad()
     def get_input(self, batch, k, return_first_stage_outputs=False, force_c_encode=False,
                   cond_key=None, return_original_cond=False, bs=None):
-        x = super().get_input(batch, k)
+        x = DDPM.get_input(self, batch, k)
         # print(batch["class_id"], batch["class_id"].shape)
         cls_id = batch["class_id"][:, 0]  
         # print(cls_id, cls_id.shape)
@@ -1552,7 +1552,7 @@ class SDSeg(LatentDiffusion):
                 elif cond_key == 'class_label':
                     xc = batch
                 else:
-                    xc = super().get_input(batch, cond_key).to(self.device)
+                    xc = DDPM.get_input(self, batch, cond_key).to(self.device)
             else:
                 xc = x
             if not self.cond_stage_trainable or force_c_encode:

@@ -109,7 +109,7 @@ lightning:
         max_images: 8
         increase_log_steps: False
         log_dice_frequency: 5000
-        log_first_step: True
+        log_first_step: true
 
 
   trainer:

@@ -57,7 +57,7 @@ class SynapseBase(Dataset):
 
         self.data_root = data_root
         if mode == "test_vol":
-            self.data_paths = glob.glob(os.path.join(self.data_root, "img*"))[:1]
+            self.data_paths = glob.glob(os.path.join(self.data_root, "img*"))#[:1]
         else:
             self.data_paths = glob.glob(os.path.join(self.data_root, "*.png"))  # seg map, img slice with *.npy postfix
         self._length = len(self.data_paths)

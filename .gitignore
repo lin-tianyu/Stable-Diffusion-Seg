@@ -27,6 +27,10 @@ data/synapse/train/
 data/synapse/test/
 data/synapse/test_vol/
 
+# logs
+logs/
+*.out
+
 # pytorch/python/numpy formats
 *.pth
 *.ckpt
