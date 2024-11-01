@@ -495,25 +495,25 @@ class LatentDiffusion(DDPM):
                  cond_stage_config,
                  num_timesteps_cond=None,
                  cond_stage_key="image",
-                 num_classes=2,
                  cond_stage_trainable=False,
                  concat_mode=True,
                  cond_stage_forward=None,
                  conditioning_key=None,
                  scale_factor=1.0,
                  scale_by_std=False,
+                 num_classes=2,
                  load_only_unet=True,
                  *args, **kwargs):
-        self.num_timesteps_cond = default(num_timesteps_cond, 1)
         self.num_classes = num_classes
-        self.scale_by_std = scale_by_std
         self.load_only_unet = load_only_unet
+        self.num_timesteps_cond = default(num_timesteps_cond, 1)
+        self.scale_by_std = scale_by_std
         assert self.num_timesteps_cond <= kwargs['timesteps']
         # for backwards compatibility after implementation of DiffusionWrapper
-        # if conditioning_key is None:
-        #     conditioning_key = 'concat' if concat_mode else 'crossattn'
-        # if cond_stage_config == '__is_unconditional__':
-        #     conditioning_key = None
+        if conditioning_key is None:
+            conditioning_key = 'concat' if concat_mode else 'crossattn'
+        if cond_stage_config == '__is_unconditional__':
+            conditioning_key = None
         ckpt_path = kwargs.pop("ckpt_path", None)
         ignore_keys = kwargs.pop("ignore_keys", [])
         super().__init__(conditioning_key=conditioning_key, *args, **kwargs)
@@ -536,7 +536,7 @@ class LatentDiffusion(DDPM):
 
         self.restarted_from_ckpt = False
         if ckpt_path is not None:
-            self.init_from_ckpt(ckpt_path, ignore_keys, only_model=self.load_only_unet)
+            self.init_from_ckpt(ckpt_path, ignore_keys, only_model=load_only_unet)
             self.restarted_from_ckpt = True
 
     def make_cond_schedule(self, ):

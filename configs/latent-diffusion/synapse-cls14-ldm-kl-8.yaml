@@ -3,24 +3,22 @@ model:
   target: ldm.models.diffusion.ddpm.LatentDiffusion
   params:
     num_classes: 14   # including background
-    l_simple_weight: 1
-    seg_loss_weight: 1
-    cond_stage_trainable: true    # modified
-    concat_mode: True
-    scale_by_std: True
-    use_ema: True
+    load_only_unet: true
     linear_start: 0.0015
     linear_end: 0.0155
     num_timesteps_cond: 1
     log_every_t: 200
     timesteps: 1000
     loss_type: l1
-    load_only_unet: true
     first_stage_key: "segmentation"
     cond_stage_key: "image"
-    conditioning_key: "hybrid"
+    conditioning_key: "hybrid"  # to include class embedding
     image_size: 32
     channels: 4
+    cond_stage_trainable: true    # modified
+    concat_mode: True
+    scale_by_std: True
+    use_ema: True
     monitor: 'val_avg_dice'
     ckpt_path: "models/ldm/lsun_churches256/model.ckpt"
 
@@ -112,6 +110,7 @@ lightning:
         max_images: 8
         increase_log_steps: False
         log_dice_frequency: 2500   # debug: 5; running: 5000
+        log_first_step: True
 
 
   trainer:

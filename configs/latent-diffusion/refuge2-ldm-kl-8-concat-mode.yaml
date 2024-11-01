@@ -3,13 +3,13 @@ model:
   target: ldm.models.diffusion.ddpm.LatentDiffusion
   params:
     num_classes: 2
+    load_only_unet: true
     linear_start: 0.0015
     linear_end: 0.0155
     num_timesteps_cond: 1
     log_every_t: 200
     timesteps: 1000
     loss_type: l1
-    load_only_unet: true
     first_stage_key: "segmentation"
     cond_stage_key: "image"
     conditioning_key: "concat"
@@ -18,8 +18,9 @@ model:
     cond_stage_trainable: true    # modified
     concat_mode: True
     scale_by_std: True
+    use_ema: True
     monitor: 'val_avg_dice'
-#    ckpt_path: "models/ldm/lsun_churches256/model.ckpt"
+    ckpt_path: "models/ldm/lsun_churches256/model.ckpt" 
 
     scheduler_config: # 10000 warmup steps
       target: ldm.lr_scheduler.LambdaLinearScheduler

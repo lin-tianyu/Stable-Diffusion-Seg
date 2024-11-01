@@ -470,7 +470,7 @@ class LatentDiffusion(DDPM):
 
         self.restarted_from_ckpt = False
         if ckpt_path is not None:
-            self.init_from_ckpt(ckpt_path, ignore_keys)
+            self.init_from_ckpt(ckpt_path, ignore_keys, only_model=kwargs["load_only_unet"])
             self.restarted_from_ckpt = True
 
     def make_cond_schedule(self, ):
@@ -1397,12 +1397,28 @@ class LatentDiffusion(DDPM):
         return x
     
 class SDSeg(LatentDiffusion):
-    def __init__(self, first_stage_config, cond_stage_config, num_timesteps_cond=None, cond_stage_key="image", cond_stage_trainable=False, concat_mode=True, cond_stage_forward=None, conditioning_key=None, scale_factor=1, scale_by_std=False, *args, **kwargs):
-        super().__init__(first_stage_config, cond_stage_config, num_timesteps_cond, cond_stage_key, cond_stage_trainable, concat_mode, cond_stage_forward, conditioning_key, scale_factor, scale_by_std, *args, **kwargs)
+    def __init__(self, first_stage_config, cond_stage_config, load_only_unet=True, num_classes=2, *args, **kwargs):
+        super().__init__(first_stage_config, cond_stage_config, load_only_unet=load_only_unet, *args, **kwargs)
+        self.num_classes = num_classes
+
     def init_from_ckpt():
         pass
-    def training_step():
-        pass
+
+    def training_step(self, batch, batch_idx):
+        loss, loss_dict = self.shared_step(batch)
+        loss_dict.pop("train/loss_vlb")
+
+        self.log_dict(loss_dict, prog_bar=True,
+                      logger=True, on_step=True, on_epoch=False)
+        self.log("step", self.global_step,
+                 prog_bar=True, logger=True, on_step=True, on_epoch=False)
+
+        if self.use_scheduler:
+            lr = self.optimizers().param_groups[0]['lr']
+            self.log('param/lr_abs', lr.item(), prog_bar=False, logger=True, on_step=True, on_epoch=False)
+
+        return loss
+    
     def on_train_batch_start():
         pass
     def get_denoise_row_from_list():
