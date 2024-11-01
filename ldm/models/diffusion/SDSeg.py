@@ -1,5 +1,13 @@
 """
-Brand new version of SDSeg! It is 100% the same as the original one, but re-write with OOP.
+Brand new version of SDSeg! It is 100% the same model as the original one, but re-write with OOP.
+
+In this new version:
+    SDSeg <-- (raw) LatentDiffusion <-- (raw) DDPM
+
+Note that:
+1. In `ddpm.py`: tons of modifications have been made on both `DDPM` and `LatentDiffusion`, quite ugly...
+2. In `SDSeg.py` (this file): the `DDPM` and `LatentDiffusion` is 99% from https://github.com/CompVis/stable-diffusion/blob/main/ldm/models/diffusion/ddpm.py
+    (only add a `only_model` parameter in `LatentDiffusion` when calling `self.init_from_ckpt`!)
 
 """
 

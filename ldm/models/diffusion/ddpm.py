@@ -2,7 +2,13 @@
 The original version of SDSeg, built by disgustingly modify `LatentDiffusion`. Err.
 I want to reimplement SDSeg using OOP! Elegance is the key!
 
-    SDSeg <-- LatentDiffusion <-- DDPM
+In this original version:
+    SDSeg == (modificaions of) LatentDiffusion <-- (modifications of) DDPM
+
+Note that:
+1. In `ddpm.py` (this file): tons of modifications have been made on both `DDPM` and `LatentDiffusion`, quite ugly...
+2. In `SDSeg.py`: the `DDPM` and `LatentDiffusion` is 99% from https://github.com/CompVis/stable-diffusion/blob/main/ldm/models/diffusion/ddpm.py
+    (only add a `only_model` parameter in `LatentDiffusion` when calling `self.init_from_ckpt`!)
 
 Tianyu
 Oct 31, 2024
