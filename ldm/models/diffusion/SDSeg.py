@@ -2121,28 +2121,6 @@ class SDSeg(LatentDiffusion):
                 x_samples = self.decode_first_stage(samples.to(self.device))
                 log["samples_x0_quantized"] = x_samples
 
-            """ useless for segmentation task """
-            # if inpaint:
-            #     # make a simple center square
-            #     b, h, w = z.shape[0], z.shape[2], z.shape[3]
-            #     mask = torch.ones(N, h, w).to(self.device)
-            #     # zeros will be filled in
-            #     mask[:, h // 4:3 * h // 4, w // 4:3 * w // 4] = 0.
-            #     mask = mask[:, None, ...]
-            #     with self.ema_scope("Plotting Inpaint"):
-            #         samples, _ = self.sample_log(cond=c, batch_size=N, ddim=use_ddim, eta=ddim_eta,
-            #                                      ddim_steps=ddim_steps, x0=z[:N], mask=mask)
-            #     x_samples = self.decode_first_stage(samples.to(self.device))
-            #     log["samples_inpainting"] = x_samples
-            #     log["mask"] = mask
-            #
-            #     # outpaint
-            #     with self.ema_scope("Plotting Outpaint"):
-            #         samples, _ = self.sample_log(cond=c, batch_size=N, ddim=use_ddim, eta=ddim_eta,
-            #                                      ddim_steps=ddim_steps, x0=z[:N], mask=mask)
-            #     x_samples = self.decode_first_stage(samples.to(self.device))
-            #     log["samples_outpainting"] = x_samples
-
         if plot_progressive_rows:
             with self.ema_scope("Plotting Progressives"):
                 img, progressives = self.progressive_denoising(c,
