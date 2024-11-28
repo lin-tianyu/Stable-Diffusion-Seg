@@ -1,17 +1,14 @@
 """
-The original version of SDSeg, built by disgustingly modify `LatentDiffusion`. Err.
-I want to reimplement SDSeg using OOP! Elegance is the key!
+Brand new version of SDSeg! It is 100% the same model as the original one, but re-write with OOP.
 
-In this original version:
-    SDSeg == (modificaions of) LatentDiffusion <-- (modifications of) DDPM
+In this new version:
+    SDSeg <-- (raw) LatentDiffusion <-- (raw) DDPM
 
 Note that:
-1. In `ddpm.py` (this file): tons of modifications have been made on both `DDPM` and `LatentDiffusion`, quite ugly...
-2. In `SDSeg.py`: the `DDPM` and `LatentDiffusion` is 99% from https://github.com/CompVis/stable-diffusion/blob/main/ldm/models/diffusion/ddpm.py
+1. In `ddpm.py`: tons of modifications have been made on both `DDPM` and `LatentDiffusion`, quite ugly...
+2. In `SDSeg.py` (this file): the `DDPM` and `LatentDiffusion` is 99% from https://github.com/CompVis/stable-diffusion/blob/main/ldm/models/diffusion/ddpm.py
     (only add a `only_model` parameter in `LatentDiffusion` when calling `self.init_from_ckpt`!)
 
-Tianyu
-Oct 31, 2024
 """
 
 import sys
@@ -199,73 +196,23 @@ class DDPM(pl.LightningModule):
                 if context is not None:
                     print(f"{context}: Restored training weights")
 
-    def init_from_ckpt(self, path, ignore_keys=list(), only_model=True):  # modified, only load unet
-        """load only pretrained unet in training phase, load the entire model in testing phase"""
-        sd = self.model.diffusion_model.state_dict()
-        self.unet_sd_keys = set(map(lambda x: x.split(".")[0], sd.keys()))
-        
-        if not only_model:  
-            sd = torch.load(path, map_location="cpu")
-            if "state_dict" in list(sd.keys()):
-                sd = sd["state_dict"]
-            keys = list(sd.keys())
-            for k in keys:
-                for ik in ignore_keys:
-                    if k.startswith(ik):
-                        print("Deleting key {} from state_dict.".format(k))
-                        del sd[k]
-            missing, unexpected = self.load_state_dict(sd, strict=False)
-            print(f"\033[32mRestored Diffusion, Cond-stage and First-stage model from {path} with "
-                  f"{len(missing)} missing and {len(unexpected)} unexpected keys\033[0m")
-            if len(missing) > 0:
-                print(f"\033[31m[Missing Keys]\033[0m: {missing}\n")
-            if len(unexpected) > 0:
-                print(f"\033[31m[Unexpected Keys]\033[0m: {unexpected}\n")
-        else:
-            pretrain_sd = torch.load(path, map_location="cpu")
-            
-            if "label_emb" in self.unet_sd_keys:
-                label_emb_keys = [key for key in sd.keys() if "label_emb" in key]
-                label_emb_tmp = [sd.pop(key) for key in label_emb_keys]
-            else:
-                label_emb_tmp = None
-            if "state_dict" in list(pretrain_sd.keys()):
-                pretrain_sd = pretrain_sd["state_dict"]
-            keys = list(pretrain_sd.keys())
-            # deleting non-unet parameters
-            for k in keys:  # only load unet parameters!
-                if not k.startswith("model."):
-                    del pretrain_sd[k]
-                else:
-                    v = pretrain_sd.pop(k)
-                    new_k = k.replace("model.diffusion_model.", "")
-                    pretrain_sd[new_k] = v
-            # check incompatible parameters and fill with zeros (only 1 layer)
-            for pk, k in zip(sorted(pretrain_sd.keys()), sorted(sd.keys())):
-                assert pk == k and len(pretrain_sd[pk].shape) == len(sd[k].shape), \
-                    ((pk, k) , (len(pretrain_sd[pk].shape) , len(sd[k].shape)))
-                pshape, shape = pretrain_sd[pk].shape, sd[k].shape
-                if pshape != shape:
-                    if len(pretrain_sd[pk].shape) == 4:
-                        # note: simply repeat is not working
-                        sd[k] = torch.cat((pretrain_sd[pk], torch.zeros(pshape)), dim=1)
-                        print(f"\033[31m[ATT]: filling zeros to initialize "
-                              f"pretrained weight '{pk}' from {pshape} to {shape}\033[0m")
-                else:
-                    sd[k] = pretrain_sd[pk]
-
-            # random init label_emb, will be ignored if not needed, so don't worry
-            if label_emb_tmp is not None:
-                for key, val in zip(label_emb_keys, label_emb_tmp):
-                    sd[key] = val
-
-            missing, unexpected = self.model.diffusion_model.load_state_dict(sd, strict=False)
-            print(f"\033[32mRestored only Diffusion Model from {path} with "
-                  f"{len(missing)} missing and {len(unexpected)} unexpected keys\033[0m")
-            if len(missing) > 0:
-                print(f"\033[31m[Missing Keys]\033[0m: {missing}\n")
-            if len(unexpected) > 0:
-                print(f"\033[31m[Unexpected Keys]\033[0m: {unexpected}\n")
+    def init_from_ckpt(self, path, ignore_keys=list(), only_model=False):
+        sd = torch.load(path, map_location="cpu")
+        if "state_dict" in list(sd.keys()):
+            sd = sd["state_dict"]
+        keys = list(sd.keys())
+        for k in keys:
+            for ik in ignore_keys:
+                if k.startswith(ik):
+                    print("Deleting key {} from state_dict.".format(k))
+                    del sd[k]
+        missing, unexpected = self.load_state_dict(sd, strict=False) if not only_model else self.model.load_state_dict(
+            sd, strict=False)
+        print(f"Restored from {path} with {len(missing)} missing and {len(unexpected)} unexpected keys")
+        if len(missing) > 0:
+            print(f"Missing Keys: {missing}")
+        if len(unexpected) > 0:
+            print(f"Unexpected Keys: {unexpected}")
 
     def q_mean_variance(self, x_start, t):
         """
@@ -408,22 +355,15 @@ class DDPM(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         loss, loss_dict = self.shared_step(batch)
 
-        if batch_idx % 10 == 0:
-            self.log("train/input_layer_pretrained_4",
-                     self.model.diffusion_model.state_dict()["input_blocks.0.0.weight"][:, :4].mean().item())
-            self.log("train/input_layer_zero_initiate_4",
-                     self.model.diffusion_model.state_dict()["input_blocks.0.0.weight"][:, 4:].mean().item())
-        loss_dict.pop("train/loss_vlb")
-
         self.log_dict(loss_dict, prog_bar=True,
-                      logger=True, on_step=True, on_epoch=False)
+                      logger=True, on_step=True, on_epoch=True)
 
-        self.log("step", self.global_step,
+        self.log("global_step", self.global_step,
                  prog_bar=True, logger=True, on_step=True, on_epoch=False)
 
         if self.use_scheduler:
             lr = self.optimizers().param_groups[0]['lr']
-            self.log('param/lr_abs', lr.item(), prog_bar=False, logger=True, on_step=True, on_epoch=False)
+            self.log('lr_abs', lr, prog_bar=True, logger=True, on_step=True, on_epoch=False)
 
         return loss
 
@@ -507,11 +447,7 @@ class LatentDiffusion(DDPM):
                  conditioning_key=None,
                  scale_factor=1.0,
                  scale_by_std=False,
-                 num_classes=2,
-                 load_only_unet=True,
                  *args, **kwargs):
-        self.num_classes = num_classes
-        self.load_only_unet = load_only_unet
         self.num_timesteps_cond = default(num_timesteps_cond, 1)
         self.scale_by_std = scale_by_std
         assert self.num_timesteps_cond <= kwargs['timesteps']
@@ -542,7 +478,7 @@ class LatentDiffusion(DDPM):
 
         self.restarted_from_ckpt = False
         if ckpt_path is not None:
-            self.init_from_ckpt(ckpt_path, ignore_keys, only_model=load_only_unet)
+            self.init_from_ckpt(ckpt_path, ignore_keys, only_model=kwargs["load_only_unet"])
             self.restarted_from_ckpt = True
 
     def make_cond_schedule(self, ):
@@ -550,23 +486,22 @@ class LatentDiffusion(DDPM):
         ids = torch.round(torch.linspace(0, self.num_timesteps - 1, self.num_timesteps_cond)).long()
         self.cond_ids[:self.num_timesteps_cond] = ids
 
+    @rank_zero_only
     @torch.no_grad()
     def on_train_batch_start(self, batch, batch_idx, dataloader_idx):
         # only for very first batch
-        if self.current_epoch == 0 and self.global_step == 0 and batch_idx == 0:  # and not self.restarted_from_ckpt:
-            if self.scale_by_std:
-                assert self.scale_factor == 1., 'rather not use custom rescaling and std-rescaling simultaneously'
-                # set rescale weight to 1./std of encodings
-                x = super().get_input(batch, self.first_stage_key)
-                x = x.to(self.device)
-                encoder_posterior = self.encode_first_stage(x)
-                z = self.get_first_stage_encoding(encoder_posterior).detach()   # range roughly in (-18, 18)
-                # print(z.shape, z.flatten().shape, z.min(), z.max(), z.flatten().std())
-                del self.scale_factor
-                self.register_buffer('scale_factor', 1. / z.flatten().std())    # sts3d: 1/7.8957, synapse: 1/8.7146
+        if self.scale_by_std and self.current_epoch == 0 and self.global_step == 0 and batch_idx == 0 and not self.restarted_from_ckpt:
+            assert self.scale_factor == 1., 'rather not use custom rescaling and std-rescaling simultaneously'
+            # set rescale weight to 1./std of encodings
+            print("### USING STD-RESCALING ###")
+            x = super().get_input(batch, self.first_stage_key)
+            x = x.to(self.device)
+            encoder_posterior = self.encode_first_stage(x)
+            z = self.get_first_stage_encoding(encoder_posterior).detach()
+            del self.scale_factor
+            self.register_buffer('scale_factor', 1. / z.flatten().std())
             print(f"setting self.scale_factor to {self.scale_factor}")
-            print(f"### USING STD-RESCALING: \033[31m{self.scale_by_std}\033[0m ###")
-            self.log("val_avg_dice", 0, prog_bar=False, logger=True, on_step=True, on_epoch=False)
+            print("### USING STD-RESCALING ###")
 
     def register_schedule(self,
                           given_betas=None, beta_schedule="linear", timesteps=1000,
@@ -605,25 +540,17 @@ class LatentDiffusion(DDPM):
             model = instantiate_from_config(config)
             self.cond_stage_model = model
 
-    def get_denoise_row_from_list(self, samples, desc='', force_no_decoder_quantization=False):
+    def _get_denoise_row_from_list(self, samples, desc='', force_no_decoder_quantization=False):
         denoise_row = []
-        denoise_row_latent = []
         for zd in tqdm(samples, desc=desc):
             denoise_row.append(self.decode_first_stage(zd.to(self.device),
-                                                       force_not_quantize=force_no_decoder_quantization))
-            denoise_row_latent.append(zd.to(self.device))
+                                                            force_not_quantize=force_no_decoder_quantization))
         n_imgs_per_row = len(denoise_row)
         denoise_row = torch.stack(denoise_row)  # n_log_step, n_row, C, H, W
         denoise_grid = rearrange(denoise_row, 'n b c h w -> b n c h w')
         denoise_grid = rearrange(denoise_grid, 'b n c h w -> (b n) c h w')
         denoise_grid = make_grid(denoise_grid, nrow=n_imgs_per_row)
-
-        n_imgs_per_row_latent = len(denoise_row_latent)
-        denoise_row_latent = torch.stack(denoise_row_latent)  # n_log_step, n_row, C, H, W
-        denoise_grid_latent = rearrange(denoise_row_latent, 'n b c h w -> b n c h w')
-        denoise_grid_latent = rearrange(denoise_grid_latent, 'b n c h w -> (b n) c h w')
-        denoise_grid_latent = make_grid(denoise_grid_latent, nrow=n_imgs_per_row_latent)
-        return denoise_grid, denoise_grid_latent
+        return denoise_grid
 
     def get_first_stage_encoding(self, encoder_posterior):
         if isinstance(encoder_posterior, DiagonalGaussianDistribution):
@@ -740,9 +667,6 @@ class LatentDiffusion(DDPM):
     def get_input(self, batch, k, return_first_stage_outputs=False, force_c_encode=False,
                   cond_key=None, return_original_cond=False, bs=None):
         x = super().get_input(batch, k)
-        # print(batch["class_id"], batch["class_id"].shape)
-        cls_id = batch["class_id"][:, 0]  
-        # print(cls_id, cls_id.shape)
         if bs is not None:
             x = x[:bs]
         x = x.to(self.device)
@@ -783,7 +707,7 @@ class LatentDiffusion(DDPM):
             if self.use_positional_encodings:
                 pos_x, pos_y = self.compute_latent_shifts(batch)
                 c = {'pos_x': pos_x, 'pos_y': pos_y}
-        out = [z, c, x, cls_id]
+        out = [z, c]
         if return_first_stage_outputs:
             xrec = self.decode_first_stage(z)
             out.extend([x, xrec])
@@ -952,13 +876,12 @@ class LatentDiffusion(DDPM):
             return self.first_stage_model.encode(x)
 
     def shared_step(self, batch, **kwargs):
-        x, c, seg_label, cls_id = self.get_input(batch, self.first_stage_key)
-        loss = self(x, c, cls_id, seg_label)
+        x, c = self.get_input(batch, self.first_stage_key)
+        loss = self(x, c)
         return loss
 
-    def forward(self, x, c, cls_id, *args, **kwargs):
+    def forward(self, x, c, *args, **kwargs):
         t = torch.randint(0, self.num_timesteps, (x.shape[0],), device=self.device).long()
-        assert t.shape[0] == cls_id.shape[0], (t.shape, cls_id.shape, cls_id.shape[0])
         if self.model.conditioning_key is not None:
             assert c is not None
             if self.cond_stage_trainable:
@@ -966,7 +889,6 @@ class LatentDiffusion(DDPM):
             if self.shorten_cond_schedule:  # TODO: drop this option
                 tc = self.cond_ids[t].to(self.device)
                 c = self.q_sample(x_start=c, t=tc, noise=torch.randn_like(c.float()))
-        c = dict(c_concat=[c], c_crossattn=[cls_id])  # hybrid mode requires a dict
         return self.p_losses(x, c, t, *args, **kwargs)
 
     def _rescale_annotations(self, bboxes, crop_coordinates):  # TODO: move to dataset
@@ -1100,12 +1022,7 @@ class LatentDiffusion(DDPM):
         kl_prior = normal_kl(mean1=qt_mean, logvar1=qt_log_variance, mean2=0.0, logvar2=0.0)
         return mean_flat(kl_prior) / np.log(2.0)
 
-    def get_loss_seg_regression(self, x_start, x_noisy, t, model_output, seg_label=None):
-        x_recon = self.predict_start_from_noise(x_noisy, t, noise=model_output)
-        return self.get_loss(x_recon, x_start, mean=False)  # loss type according to `self.loss_type`
-
-
-    def p_losses(self, x_start, cond, t, seg_label, noise=None):
+    def p_losses(self, x_start, cond, t, noise=None):
         noise = default(noise, lambda: torch.randn_like(x_start))
         x_noisy = self.q_sample(x_start=x_start, t=t, noise=noise)
         model_output = self.apply_model(x_noisy, t, cond)
@@ -1119,37 +1036,24 @@ class LatentDiffusion(DDPM):
             target = noise
         else:
             raise NotImplementedError()
-    
 
-        # get latent segmentation loss
-        loss_seg = self.get_loss_seg_regression(x_start, x_noisy, t, model_output, seg_label).mean([1, 2, 3])
-        loss_dict.update({f"{prefix}/loss_seg": loss_seg.mean().item()})
-
-        # get noise loss 
         loss_simple = self.get_loss(model_output, target, mean=False).mean([1, 2, 3])
-        loss_dict.update({f'{prefix}/loss_simple': loss_simple.mean().item()})
+        loss_dict.update({f'{prefix}/loss_simple': loss_simple.mean()})
 
-        # learn logvar (useless)
-        logvar_t = self.logvar.to(self.device)[t]
+        logvar_t = self.logvar[t].to(self.device)
         loss = loss_simple / torch.exp(logvar_t) + logvar_t
-        # loss = loss_seg / torch.exp(logvar_t) + logvar_t
-        # loss = (loss_simple + loss_seg) / torch.exp(logvar_t) + logvar_t
+        # loss = loss_simple / torch.exp(self.logvar) + self.logvar
         if self.learn_logvar:
-            loss_dict.update({f'{prefix}/loss_gamma': loss.mean().item()})
-            loss_dict.update({'logvar': self.logvar.data.mean().item()})
+            loss_dict.update({f'{prefix}/loss_gamma': loss.mean()})
+            loss_dict.update({'logvar': self.logvar.data.mean()})
 
-        # create loss
         loss = self.l_simple_weight * loss.mean()
 
-        # get vlb loss (useless)
         loss_vlb = self.get_loss(model_output, target, mean=False).mean(dim=(1, 2, 3))
         loss_vlb = (self.lvlb_weights[t] * loss_vlb).mean()
-        loss_dict.update({f'{prefix}/loss_vlb': loss_vlb.item()})
-
-        # add vlb (useless) and latent seg loss
-        loss += (self.original_elbo_weight * loss_vlb) 
-        loss += loss_seg.mean() # weight == 1 is good enough! doesn't need to change this, 
-        loss_dict.update({f'{prefix}/loss': loss.item()})
+        loss_dict.update({f'{prefix}/loss_vlb': loss_vlb})
+        loss += (self.original_elbo_weight * loss_vlb)
+        loss_dict.update({f'{prefix}/loss': loss})
 
         return loss, loss_dict
 
@@ -1355,6 +1259,402 @@ class LatentDiffusion(DDPM):
 
         return samples, intermediates
 
+
+    @torch.no_grad()
+    def log_images(self, batch, N=8, n_row=4, sample=True, ddim_steps=200, ddim_eta=1., return_keys=None,
+                   quantize_denoised=True, inpaint=True, plot_denoise_rows=False, plot_progressive_rows=True,
+                   plot_diffusion_rows=True, **kwargs):
+
+        use_ddim = ddim_steps is not None
+
+        log = dict()
+        z, c, x, xrec, xc = self.get_input(batch, self.first_stage_key,
+                                           return_first_stage_outputs=True,
+                                           force_c_encode=True,
+                                           return_original_cond=True,
+                                           bs=N)
+        N = min(x.shape[0], N)
+        n_row = min(x.shape[0], n_row)
+        log["inputs"] = x
+        log["reconstruction"] = xrec
+        if self.model.conditioning_key is not None:
+            if hasattr(self.cond_stage_model, "decode"):
+                xc = self.cond_stage_model.decode(c)
+                log["conditioning"] = xc
+            elif self.cond_stage_key in ["caption"]:
+                xc = log_txt_as_img((x.shape[2], x.shape[3]), batch["caption"])
+                log["conditioning"] = xc
+            elif self.cond_stage_key == 'class_label':
+                xc = log_txt_as_img((x.shape[2], x.shape[3]), batch["human_label"])
+                log['conditioning'] = xc
+            elif isimage(xc):
+                log["conditioning"] = xc
+            if ismap(xc):
+                log["original_conditioning"] = self.to_rgb(xc)
+
+        if plot_diffusion_rows:
+            # get diffusion row
+            diffusion_row = list()
+            z_start = z[:n_row]
+            for t in range(self.num_timesteps):
+                if t % self.log_every_t == 0 or t == self.num_timesteps - 1:
+                    t = repeat(torch.tensor([t]), '1 -> b', b=n_row)
+                    t = t.to(self.device).long()
+                    noise = torch.randn_like(z_start)
+                    z_noisy = self.q_sample(x_start=z_start, t=t, noise=noise)
+                    diffusion_row.append(self.decode_first_stage(z_noisy))
+
+            diffusion_row = torch.stack(diffusion_row)  # n_log_step, n_row, C, H, W
+            diffusion_grid = rearrange(diffusion_row, 'n b c h w -> b n c h w')
+            diffusion_grid = rearrange(diffusion_grid, 'b n c h w -> (b n) c h w')
+            diffusion_grid = make_grid(diffusion_grid, nrow=diffusion_row.shape[0])
+            log["diffusion_row"] = diffusion_grid
+
+        if sample:
+            # get denoise row
+            with self.ema_scope("Plotting"):
+                samples, z_denoise_row = self.sample_log(cond=c,batch_size=N,ddim=use_ddim,
+                                                         ddim_steps=ddim_steps,eta=ddim_eta)
+                # samples, z_denoise_row = self.sample(cond=c, batch_size=N, return_intermediates=True)
+            x_samples = self.decode_first_stage(samples)
+            log["samples"] = x_samples
+            if plot_denoise_rows:
+                denoise_grid = self._get_denoise_row_from_list(z_denoise_row)
+                log["denoise_row"] = denoise_grid
+
+            if quantize_denoised and not isinstance(self.first_stage_model, AutoencoderKL) and not isinstance(
+                    self.first_stage_model, IdentityFirstStage):
+                # also display when quantizing x0 while sampling
+                with self.ema_scope("Plotting Quantized Denoised"):
+                    samples, z_denoise_row = self.sample_log(cond=c,batch_size=N,ddim=use_ddim,
+                                                             ddim_steps=ddim_steps,eta=ddim_eta,
+                                                             quantize_denoised=True)
+                    # samples, z_denoise_row = self.sample(cond=c, batch_size=N, return_intermediates=True,
+                    #                                      quantize_denoised=True)
+                x_samples = self.decode_first_stage(samples.to(self.device))
+                log["samples_x0_quantized"] = x_samples
+
+            if inpaint:
+                # make a simple center square
+                b, h, w = z.shape[0], z.shape[2], z.shape[3]
+                mask = torch.ones(N, h, w).to(self.device)
+                # zeros will be filled in
+                mask[:, h // 4:3 * h // 4, w // 4:3 * w // 4] = 0.
+                mask = mask[:, None, ...]
+                with self.ema_scope("Plotting Inpaint"):
+
+                    samples, _ = self.sample_log(cond=c,batch_size=N,ddim=use_ddim, eta=ddim_eta,
+                                                ddim_steps=ddim_steps, x0=z[:N], mask=mask)
+                x_samples = self.decode_first_stage(samples.to(self.device))
+                log["samples_inpainting"] = x_samples
+                log["mask"] = mask
+
+                # outpaint
+                with self.ema_scope("Plotting Outpaint"):
+                    samples, _ = self.sample_log(cond=c, batch_size=N, ddim=use_ddim,eta=ddim_eta,
+                                                ddim_steps=ddim_steps, x0=z[:N], mask=mask)
+                x_samples = self.decode_first_stage(samples.to(self.device))
+                log["samples_outpainting"] = x_samples
+
+        if plot_progressive_rows:
+            with self.ema_scope("Plotting Progressives"):
+                img, progressives = self.progressive_denoising(c,
+                                                               shape=(self.channels, self.image_size, self.image_size),
+                                                               batch_size=N)
+            prog_row = self._get_denoise_row_from_list(progressives, desc="Progressive Generation")
+            log["progressive_row"] = prog_row
+
+        if return_keys:
+            if np.intersect1d(list(log.keys()), return_keys).shape[0] == 0:
+                return log
+            else:
+                return {key: log[key] for key in return_keys}
+        return log
+
+    def configure_optimizers(self):
+        lr = self.learning_rate
+        params = list(self.model.parameters())
+        if self.cond_stage_trainable:
+            print(f"{self.__class__.__name__}: Also optimizing conditioner params!")
+            params = params + list(self.cond_stage_model.parameters())
+        if self.learn_logvar:
+            print('Diffusion model optimizing logvar')
+            params.append(self.logvar)
+        opt = torch.optim.AdamW(params, lr=lr)
+        if self.use_scheduler:
+            assert 'target' in self.scheduler_config
+            scheduler = instantiate_from_config(self.scheduler_config)
+
+            print("Setting up LambdaLR scheduler...")
+            scheduler = [
+                {
+                    'scheduler': LambdaLR(opt, lr_lambda=scheduler.schedule),
+                    'interval': 'step',
+                    'frequency': 1
+                }]
+            return [opt], scheduler
+        return opt
+
+    @torch.no_grad()
+    def to_rgb(self, x):
+        x = x.float()
+        if not hasattr(self, "colorize"):
+            self.colorize = torch.randn(3, x.shape[1], 1, 1).to(x)
+        x = nn.functional.conv2d(x, weight=self.colorize)
+        x = 2. * (x - x.min()) / (x.max() - x.min()) - 1.
+        return x
+    
+class SDSeg(LatentDiffusion):
+    def __init__(self, first_stage_config, cond_stage_config, load_only_unet=True, num_classes=2, *args, **kwargs):
+        super().__init__(first_stage_config, cond_stage_config, load_only_unet=load_only_unet, *args, **kwargs)
+        self.num_classes = num_classes
+
+    def init_from_ckpt(self, path, ignore_keys=list(), only_model=True):  # modified, only load unet
+        """load only pretrained unet in training phase, load the entire model in testing phase"""
+        sd = self.model.diffusion_model.state_dict()
+        self.unet_sd_keys = set(map(lambda x: x.split(".")[0], sd.keys()))
+        
+        if not only_model:  
+            sd = torch.load(path, map_location="cpu")
+            if "state_dict" in list(sd.keys()):
+                sd = sd["state_dict"]
+            keys = list(sd.keys())
+            for k in keys:
+                for ik in ignore_keys:
+                    if k.startswith(ik):
+                        print("Deleting key {} from state_dict.".format(k))
+                        del sd[k]
+            missing, unexpected = self.load_state_dict(sd, strict=False)
+            print(f"\033[32mRestored Diffusion, Cond-stage and First-stage model from {path} with "
+                  f"{len(missing)} missing and {len(unexpected)} unexpected keys\033[0m")
+            if len(missing) > 0:
+                print(f"\033[31m[Missing Keys]\033[0m: {missing}\n")
+            if len(unexpected) > 0:
+                print(f"\033[31m[Unexpected Keys]\033[0m: {unexpected}\n")
+        else:
+            pretrain_sd = torch.load(path, map_location="cpu")
+            
+            if "label_emb" in self.unet_sd_keys:
+                label_emb_keys = [key for key in sd.keys() if "label_emb" in key]
+                label_emb_tmp = [sd.pop(key) for key in label_emb_keys]
+            else:
+                label_emb_tmp = None
+            if "state_dict" in list(pretrain_sd.keys()):
+                pretrain_sd = pretrain_sd["state_dict"]
+            keys = list(pretrain_sd.keys())
+            # deleting non-unet parameters
+            for k in keys:  # only load unet parameters!
+                if not k.startswith("model."):
+                    del pretrain_sd[k]
+                else:
+                    v = pretrain_sd.pop(k)
+                    new_k = k.replace("model.diffusion_model.", "")
+                    pretrain_sd[new_k] = v
+            # check incompatible parameters and fill with zeros (only 1 layer)
+            for pk, k in zip(sorted(pretrain_sd.keys()), sorted(sd.keys())):
+                assert pk == k and len(pretrain_sd[pk].shape) == len(sd[k].shape), \
+                    ((pk, k) , (len(pretrain_sd[pk].shape) , len(sd[k].shape)))
+                pshape, shape = pretrain_sd[pk].shape, sd[k].shape
+                if pshape != shape:
+                    if len(pretrain_sd[pk].shape) == 4:
+                        # note: simply repeat is not working
+                        sd[k] = torch.cat((pretrain_sd[pk], torch.zeros(pshape)), dim=1)
+                        print(f"\033[31m[ATT]: filling zeros to initialize "
+                              f"pretrained weight '{pk}' from {pshape} to {shape}\033[0m")
+                else:
+                    sd[k] = pretrain_sd[pk]
+
+            # random init label_emb, will be ignored if not needed, so don't worry
+            if label_emb_tmp is not None:
+                for key, val in zip(label_emb_keys, label_emb_tmp):
+                    sd[key] = val
+
+            missing, unexpected = self.model.diffusion_model.load_state_dict(sd, strict=False)
+            print(f"\033[32mRestored only Diffusion Model from {path} with "
+                  f"{len(missing)} missing and {len(unexpected)} unexpected keys\033[0m")
+            if len(missing) > 0:
+                print(f"\033[31m[Missing Keys]\033[0m: {missing}\n")
+            if len(unexpected) > 0:
+                print(f"\033[31m[Unexpected Keys]\033[0m: {unexpected}\n")
+
+    def training_step(self, batch, batch_idx):
+        loss, loss_dict = self.shared_step(batch)
+        loss_dict.pop("train/loss_vlb")
+
+        self.log_dict(loss_dict, prog_bar=True,
+                      logger=True, on_step=True, on_epoch=False)
+        self.log("step", self.global_step,
+                 prog_bar=True, logger=True, on_step=True, on_epoch=False)
+
+        if self.use_scheduler:
+            lr = self.optimizers().param_groups[0]['lr']
+            self.log('param/lr_abs', lr.item(), prog_bar=False, logger=True, on_step=True, on_epoch=False)
+
+        return loss
+    
+    @torch.no_grad()
+    def on_train_batch_start(self, batch, batch_idx, dataloader_idx):
+        # only for very first batch
+        if self.current_epoch == 0 and self.global_step == 0 and batch_idx == 0:  # and not self.restarted_from_ckpt:
+            if self.scale_by_std:
+                assert self.scale_factor == 1., 'rather not use custom rescaling and std-rescaling simultaneously'
+                # set rescale weight to 1./std of encodings
+                x = DDPM.get_input(self, batch, self.first_stage_key)   # fk Multi-Inheritance!!! this is so ugly
+                x = x.to(self.device)
+                encoder_posterior = self.encode_first_stage(x)
+                z = self.get_first_stage_encoding(encoder_posterior).detach()   # range roughly in (-18, 18)
+                # print(z.shape, z.flatten().shape, z.min(), z.max(), z.flatten().std())
+                del self.scale_factor
+                self.register_buffer('scale_factor', 1. / z.flatten().std())    # sts3d: 1/7.8957, synapse: 1/8.7146
+            print(f"setting self.scale_factor to {self.scale_factor}")
+            print(f"### USING STD-RESCALING: \033[31m{self.scale_by_std}\033[0m ###")
+            self.log("val_avg_dice", 0, prog_bar=False, logger=True, on_step=True, on_epoch=False)
+
+    def get_denoise_row_from_list(self, samples, desc='', force_no_decoder_quantization=False):
+        denoise_row = []
+        denoise_row_latent = []
+        for zd in tqdm(samples, desc=desc):
+            denoise_row.append(self.decode_first_stage(zd.to(self.device),
+                                                       force_not_quantize=force_no_decoder_quantization))
+            denoise_row_latent.append(zd.to(self.device))
+        n_imgs_per_row = len(denoise_row)
+        denoise_row = torch.stack(denoise_row)  # n_log_step, n_row, C, H, W
+        denoise_grid = rearrange(denoise_row, 'n b c h w -> b n c h w')
+        denoise_grid = rearrange(denoise_grid, 'b n c h w -> (b n) c h w')
+        denoise_grid = make_grid(denoise_grid, nrow=n_imgs_per_row)
+
+        n_imgs_per_row_latent = len(denoise_row_latent)
+        denoise_row_latent = torch.stack(denoise_row_latent)  # n_log_step, n_row, C, H, W
+        denoise_grid_latent = rearrange(denoise_row_latent, 'n b c h w -> b n c h w')
+        denoise_grid_latent = rearrange(denoise_grid_latent, 'b n c h w -> (b n) c h w')
+        denoise_grid_latent = make_grid(denoise_grid_latent, nrow=n_imgs_per_row_latent)
+        return denoise_grid, denoise_grid_latent
+    
+    @torch.no_grad()
+    def get_input(self, batch, k, return_first_stage_outputs=False, force_c_encode=False,
+                  cond_key=None, return_original_cond=False, bs=None):
+        x = DDPM.get_input(self, batch, k)
+        # print(batch["class_id"], batch["class_id"].shape)
+        cls_id = batch["class_id"][:, 0]  
+        # print(cls_id, cls_id.shape)
+        if bs is not None:
+            x = x[:bs]
+        x = x.to(self.device)
+        encoder_posterior = self.encode_first_stage(x)
+        z = self.get_first_stage_encoding(encoder_posterior).detach()
+
+        if self.model.conditioning_key is not None:
+            if cond_key is None:
+                cond_key = self.cond_stage_key
+            if cond_key != self.first_stage_key:
+                if cond_key in ['caption', 'coordinates_bbox']:
+                    xc = batch[cond_key]
+                elif cond_key == 'class_label':
+                    xc = batch
+                else:
+                    xc = DDPM.get_input(self, batch, cond_key).to(self.device)
+            else:
+                xc = x
+            if not self.cond_stage_trainable or force_c_encode:
+                if isinstance(xc, dict) or isinstance(xc, list):
+                    # import pudb; pudb.set_trace()
+                    c = self.get_learned_conditioning(xc)
+                else:
+                    c = self.get_learned_conditioning(xc.to(self.device))
+            else:
+                c = xc
+            if bs is not None:
+                c = c[:bs]
+
+            if self.use_positional_encodings:
+                pos_x, pos_y = self.compute_latent_shifts(batch)
+                ckey = __conditioning_keys__[self.model.conditioning_key]
+                c = {ckey: c, 'pos_x': pos_x, 'pos_y': pos_y}
+
+        else:
+            c = None
+            xc = None
+            if self.use_positional_encodings:
+                pos_x, pos_y = self.compute_latent_shifts(batch)
+                c = {'pos_x': pos_x, 'pos_y': pos_y}
+        out = [z, c, x, cls_id]
+        if return_first_stage_outputs:
+            xrec = self.decode_first_stage(z)
+            out.extend([x, xrec])
+        if return_original_cond:
+            out.append(xc)
+        return out
+
+    def shared_step(self, batch, **kwargs):
+        x, c, seg_label, cls_id = self.get_input(batch, self.first_stage_key)
+        loss = self(x, c, cls_id, seg_label)
+        return loss
+
+    def forward(self, x, c, cls_id, *args, **kwargs):
+        t = torch.randint(0, self.num_timesteps, (x.shape[0],), device=self.device).long()
+        assert t.shape[0] == cls_id.shape[0], (t.shape, cls_id.shape, cls_id.shape[0])
+        if self.model.conditioning_key is not None:
+            assert c is not None
+            if self.cond_stage_trainable:
+                c = self.get_learned_conditioning(c)
+            if self.shorten_cond_schedule:  # TODO: drop this option
+                tc = self.cond_ids[t].to(self.device)
+                c = self.q_sample(x_start=c, t=tc, noise=torch.randn_like(c.float()))
+        c = dict(c_concat=[c], c_crossattn=[cls_id])  # hybrid mode requires a dict
+        return self.p_losses(x, c, t, *args, **kwargs)
+    
+    def get_loss_seg_regression(self, x_start, x_noisy, t, model_output, seg_label=None):
+        x_recon = self.predict_start_from_noise(x_noisy, t, noise=model_output)
+        return self.get_loss(x_recon, x_start, mean=False)  # loss type according to `self.loss_type`
+    
+    def p_losses(self, x_start, cond, t, seg_label, noise=None):
+        noise = default(noise, lambda: torch.randn_like(x_start))
+        x_noisy = self.q_sample(x_start=x_start, t=t, noise=noise)
+        model_output = self.apply_model(x_noisy, t, cond)
+
+        loss_dict = {}
+        prefix = 'train' if self.training else 'val'
+
+        if self.parameterization == "x0":
+            target = x_start
+        elif self.parameterization == "eps":
+            target = noise
+        else:
+            raise NotImplementedError()
+    
+
+        # get latent segmentation loss
+        loss_seg = self.get_loss_seg_regression(x_start, x_noisy, t, model_output, seg_label).mean([1, 2, 3])
+        loss_dict.update({f"{prefix}/loss_seg": loss_seg.mean().item()})
+
+        # get noise loss 
+        loss_simple = self.get_loss(model_output, target, mean=False).mean([1, 2, 3])
+        loss_dict.update({f'{prefix}/loss_simple': loss_simple.mean().item()})
+
+        # learn logvar (useless)
+        logvar_t = self.logvar.to(self.device)[t]
+        loss = loss_simple / torch.exp(logvar_t) + logvar_t
+        # loss = loss_seg / torch.exp(logvar_t) + logvar_t
+        # loss = (loss_simple + loss_seg) / torch.exp(logvar_t) + logvar_t
+        if self.learn_logvar:
+            loss_dict.update({f'{prefix}/loss_gamma': loss.mean().item()})
+            loss_dict.update({'logvar': self.logvar.data.mean().item()})
+
+        # create loss
+        loss = self.l_simple_weight * loss.mean()
+
+        # get vlb loss (useless)
+        loss_vlb = self.get_loss(model_output, target, mean=False).mean(dim=(1, 2, 3))
+        loss_vlb = (self.lvlb_weights[t] * loss_vlb).mean()
+        loss_dict.update({f'{prefix}/loss_vlb': loss_vlb.item()})
+
+        # add vlb (useless) and latent seg loss
+        loss += (self.original_elbo_weight * loss_vlb) 
+        loss += loss_seg.mean() # weight == 1 is good enough! doesn't need to change this, 
+        loss_dict.update({f'{prefix}/loss': loss.item()})
+
+        return loss, loss_dict
+    
     @torch.no_grad()
     def log_dice(self, data=None, save_dir=None, ddim_steps=50):
         
@@ -1446,6 +1746,7 @@ class LatentDiffusion(DDPM):
                                         x_samples_ddim *= -1    # for softmax
                                     x_samples_ddim = torch.mean(x_samples_ddim, dim=1, keepdim=False)    # b h w
                                     out[:, :, cls] = x_samples_ddim[0, ...]
+                                out_p = out.softmax(dim=2)
                                 out = out.softmax(dim=2).argmax(dim=2, keepdim=True).repeat(1, 1, 3).numpy()    # h w c==3
                             else:
                                 x_samples_ddim = self.decode_first_stage(samples_pred[0])
@@ -1710,7 +2011,7 @@ class LatentDiffusion(DDPM):
 
         # self.model.train()    # ImageLogger will handle this
         return metrics_dict, seg_label_dict
-
+    
     @staticmethod
     @torch.no_grad()
     def prepare_latent_to_log(latent):
@@ -1719,7 +2020,7 @@ class LatentDiffusion(DDPM):
         latent_grid = rearrange(latent, 'n b c h w -> b n c h w')
         latent_grid = rearrange(latent_grid, 'b n c h w -> (b n) c h w')
         return make_grid(latent_grid, nrow=latent.shape[0])
-
+    
     @torch.no_grad()
     def log_images(self, batch, N=8, n_row=4, sample=True, ddim_steps=True, ddim_eta=1., return_keys=None,
                    quantize_denoised=True, inpaint=True, plot_denoise_rows=False, plot_progressive_rows=True,
@@ -1820,28 +2121,6 @@ class LatentDiffusion(DDPM):
                 x_samples = self.decode_first_stage(samples.to(self.device))
                 log["samples_x0_quantized"] = x_samples
 
-            """ useless for segmentation task """
-            # if inpaint:
-            #     # make a simple center square
-            #     b, h, w = z.shape[0], z.shape[2], z.shape[3]
-            #     mask = torch.ones(N, h, w).to(self.device)
-            #     # zeros will be filled in
-            #     mask[:, h // 4:3 * h // 4, w // 4:3 * w // 4] = 0.
-            #     mask = mask[:, None, ...]
-            #     with self.ema_scope("Plotting Inpaint"):
-            #         samples, _ = self.sample_log(cond=c, batch_size=N, ddim=use_ddim, eta=ddim_eta,
-            #                                      ddim_steps=ddim_steps, x0=z[:N], mask=mask)
-            #     x_samples = self.decode_first_stage(samples.to(self.device))
-            #     log["samples_inpainting"] = x_samples
-            #     log["mask"] = mask
-            #
-            #     # outpaint
-            #     with self.ema_scope("Plotting Outpaint"):
-            #         samples, _ = self.sample_log(cond=c, batch_size=N, ddim=use_ddim, eta=ddim_eta,
-            #                                      ddim_steps=ddim_steps, x0=z[:N], mask=mask)
-            #     x_samples = self.decode_first_stage(samples.to(self.device))
-            #     log["samples_outpainting"] = x_samples
-
         if plot_progressive_rows:
             with self.ema_scope("Plotting Progressives"):
                 img, progressives = self.progressive_denoising(c,
@@ -1895,15 +2174,6 @@ class LatentDiffusion(DDPM):
             return [opt], scheduler
         return opt
 
-    @torch.no_grad()
-    def to_rgb(self, x):
-        x = x.float()
-        if not hasattr(self, "colorize"):
-            self.colorize = torch.randn(3, x.shape[1], 1, 1).to(x)
-        x = nn.functional.conv2d(x, weight=self.colorize)
-        x = 2. * (x - x.min()) / (x.max() - x.min()) - 1.
-        return x
-
 
 class DiffusionWrapper(pl.LightningModule):
     def __init__(self, diff_model_config, conditioning_key):
@@ -1921,10 +2191,13 @@ class DiffusionWrapper(pl.LightningModule):
         elif self.conditioning_key == 'crossattn':
             cc = torch.cat(c_crossattn, 1)
             out = self.diffusion_model(x, t, context=cc)
-        elif self.conditioning_key == 'hybrid':     # for multi-class segmentation
+        elif self.conditioning_key == 'hybrid':
             xc = torch.cat([x] + c_concat, dim=1)
-            cc = c_crossattn[0]                     # modified
-            # cc = torch.cat(c_crossattn, dim=1)    # original
+            cc = torch.cat(c_crossattn, 1)
+            out = self.diffusion_model(xc, t, context=cc)
+        elif self.conditioning_key == 'class_embed':
+            xc = torch.cat([x] + c_concat, dim=1)
+            cc = c_crossattn[0]
             out = self.diffusion_model(xc, t, y=cc)
         elif self.conditioning_key == 'adm':
             cc = c_crossattn[0]

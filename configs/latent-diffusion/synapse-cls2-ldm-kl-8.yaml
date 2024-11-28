@@ -3,12 +3,7 @@ model:
   target: ldm.models.diffusion.ddpm.LatentDiffusion
   params:
     num_classes: 2   # including background
-    l_simple_weight: 1
-    seg_loss_weight: 1            # the \lambda in paper
-    cond_stage_trainable: True    # modified
-    concat_mode: True
-    scale_by_std: True
-    use_ema: True
+    load_only_unet: true
     linear_start: 0.0015
     linear_end: 0.0155
     num_timesteps_cond: 1
@@ -20,18 +15,12 @@ model:
     conditioning_key: "concat"
     image_size: 32
     channels: 4
+    cond_stage_trainable: True    # modified
+    concat_mode: True
+    scale_by_std: True
+    use_ema: True
     monitor: 'val_avg_dice'
     ckpt_path: "models/ldm/lsun_churches256/model.ckpt"
-
-    # scheduler_config: # 10000 warmup steps
-    #   target: ldm.lr_scheduler.LinearWarmupCosineAnnealingLR
-    #   params:
-    #     warm_up_steps: 1000
-    #     cycle_lengths: 5000
-    #     f_start: 1.e-6
-    #     f_max: 1.
-    #     f_min: 1.e-6
-    #     verbosity_interval: 0
 
     scheduler_config: # 10000 warmup steps
       target: ldm.lr_scheduler.LambdaLinearScheduler
@@ -120,7 +109,7 @@ lightning:
         max_images: 8
         increase_log_steps: False
         log_dice_frequency: 5000
-        log_first_step: True
+        log_first_step: true
 
 
   trainer:

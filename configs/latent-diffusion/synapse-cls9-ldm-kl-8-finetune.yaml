@@ -3,13 +3,8 @@ model:
   target: ldm.models.diffusion.ddpm.LatentDiffusion
   params:
     num_classes: 9   # including background, 9 classes following TransUnet
-    l_simple_weight: 1
-    seg_loss_weight: 1
-    cond_stage_trainable: True    # modified
-    concat_mode: True
-    scale_by_std: True   
-    ignore_keys: ["scale_factor"]   # not using scale factor from binary seg model
-    use_ema: True
+    load_only_unet: false   # to restore the whole binary seg model (unet + cond + autoencoder)
+    ignore_keys: ["scale_factor"]   # not using scale factor from binary seg model when finetuning
     linear_start: 0.0015
     linear_end: 0.0155
     num_timesteps_cond: 1
@@ -21,9 +16,13 @@ model:
     conditioning_key: "hybrid"
     image_size: 32
     channels: 4
+    cond_stage_trainable: True    # modified
+    concat_mode: True
+    scale_by_std: True   
+    use_ema: True
     monitor: 'val_avg_dice'
     ckpt_path: "logs/2024-02-13T17-09-00_binary_9to2/checkpoints/epoch=126-step=69999.ckpt"  # trained binary seg model
-    load_only_unet: false   # to restore the whole binary seg model (unet + cond + autoencoder)
+    
 
     scheduler_config: # 10000 warmup steps
       target: ldm.lr_scheduler.LambdaLinearScheduler

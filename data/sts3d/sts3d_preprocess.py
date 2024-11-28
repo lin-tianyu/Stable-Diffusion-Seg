@@ -60,12 +60,14 @@ if __name__ == "__main__":
 
     root_path = "."
     save_path = os.path.join(root_path, "data")
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
     root_labelled = os.path.join(root_path, "labelled")
     stop_idx = 10e10
     labeled_slice, all_slice = 0, 0
 
     """ for all labeled: train+test -> slices """
-    with open(os.path.join(root_path, "labeledall.txt"), "w+") as f:
+    with open(os.path.join(root_path, "splits", "labeledall.txt"), "w+") as f:
         train_path = glob.glob(os.path.join(root_labelled, "image", "**"))
         for idx, path in tqdm(enumerate(train_path), desc="processing labeled data"):
             img = nib.load(path).get_fdata()

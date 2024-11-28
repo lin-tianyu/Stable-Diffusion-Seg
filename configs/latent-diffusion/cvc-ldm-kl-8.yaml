@@ -3,8 +3,7 @@ model:
   target: ldm.models.diffusion.ddpm.LatentDiffusion
   params:
     num_classes: 2
-    l_simple_weight: 1
-    seg_loss_weight: 1
+    load_only_unet: true
     linear_start: 0.0015
     linear_end: 0.0155
     num_timesteps_cond: 1

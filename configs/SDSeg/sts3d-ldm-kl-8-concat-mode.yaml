@@ -1,6 +1,6 @@
 model:
   base_learning_rate: 1e-5   # ori: 5e-5
-  target: ldm.models.diffusion.ddpm.LatentDiffusion
+  target: ldm.models.diffusion.SDSeg.SDSeg  # The rewritten version SDSeg!
   params:
     num_classes: 2
     load_only_unet: true
@@ -20,7 +20,7 @@ model:
     scale_by_std: True
     use_ema: True
     monitor: 'val_avg_dice'
-    ckpt_path: "models/ldm/lsun_churches256/model.ckpt" 
+    ckpt_path: "models/ldm/lsun_churches256/model.ckpt"
 
     scheduler_config: # 10000 warmup steps
       target: ldm.lr_scheduler.LambdaLinearScheduler
@@ -66,7 +66,7 @@ model:
         lossconfig:
           target: torch.nn.Identity
 
-    cond_stage_config:
+    cond_stage_config: #"__is_first_stage__"
       target: ldm.modules.encoders.modules.AEEncoderEmbedder
       params:
         ckpt_path: "models/first_stage_models/kl-f8/model.ckpt"
@@ -88,11 +88,11 @@ data:
     num_workers: 4
     wrap: False
     train:
-      target: ldm.data.refuge2.REFUGE2Train
+      target: ldm.data.sts3d.STS3DTrain
       params:
         size: 256
     validation:
-      target: ldm.data.refuge2.REFUGE2Validation
+      target: ldm.data.sts3d.STS3DValidation
       params:
         size: 256
 
@@ -101,12 +101,12 @@ lightning:
     image_logger:
       target: main.ImageLogger
       params:
-        batch_frequency: 2000
+        batch_frequency: 5000
         max_images: 8
         increase_log_steps: False
-        log_dice_frequency: 2000
+        log_dice_frequency: 5000
 
 
   trainer:
     benchmark: True
-    check_val_every_n_epoch: 5
+    check_val_every_n_epoch: 2

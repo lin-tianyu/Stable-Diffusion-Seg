@@ -1,6 +1,6 @@
 model:
   base_learning_rate: 1e-5   # ori: 5e-5
-  target: ldm.models.diffusion.ddpm.LatentDiffusion
+  target: ldm.models.diffusion.SDSeg.SDSeg  # The rewritten version SDSeg!
   params:
     num_classes: 2
     load_only_unet: true
@@ -20,7 +20,7 @@ model:
     scale_by_std: True
     use_ema: True
     monitor: 'val_avg_dice'
-    ckpt_path: "models/ldm/lsun_churches256/model.ckpt" 
+    ckpt_path: "models/ldm/lsun_churches256/model.ckpt"
 
     scheduler_config: # 10000 warmup steps
       target: ldm.lr_scheduler.LambdaLinearScheduler
@@ -85,14 +85,18 @@ data:
   target: main.DataModuleFromConfig
   params:
     batch_size: 4
-    num_workers: 4
+    num_workers: 8
     wrap: False
     train:
-      target: ldm.data.refuge2.REFUGE2Train
+      target: ldm.data.cvc.CVCTrain
       params:
         size: 256
     validation:
-      target: ldm.data.refuge2.REFUGE2Validation
+      target: ldm.data.cvc.CVCValidation
+      params:
+        size: 256
+    test:
+      target: ldm.data.cvc.CVCTest
       params:
         size: 256
 
@@ -109,4 +113,5 @@ lightning:
 
   trainer:
     benchmark: True
-    check_val_every_n_epoch: 5
+    check_val_every_n_epoch: 2
+    accumulate_grad_batches: 1

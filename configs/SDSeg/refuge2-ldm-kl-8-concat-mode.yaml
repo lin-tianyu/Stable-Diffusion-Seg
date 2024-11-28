@@ -1,6 +1,6 @@
 model:
   base_learning_rate: 1e-5   # ori: 5e-5
-  target: ldm.models.diffusion.ddpm.LatentDiffusion
+  target: ldm.models.diffusion.SDSeg.SDSeg  # The rewritten version SDSeg!
   params:
     num_classes: 2
     load_only_unet: true

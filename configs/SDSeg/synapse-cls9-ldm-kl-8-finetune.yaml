@@ -1,9 +1,10 @@
 model:
-  base_learning_rate: 1e-5   # ori: 5e-5
-  target: ldm.models.diffusion.ddpm.LatentDiffusion
+  base_learning_rate: 1e-6   # 1e-5 for binary seg training
+  target: ldm.models.diffusion.SDSeg.SDSeg  # The rewritten version SDSeg!
   params:
-    num_classes: 2
-    load_only_unet: true
+    num_classes: 9   # including background, 9 classes following TransUnet
+    load_only_unet: false   # to restore the whole binary seg model (unet + cond + autoencoder)
+    ignore_keys: ["scale_factor"]   # not using scale factor from binary seg model when finetuning
     linear_start: 0.0015
     linear_end: 0.0155
     num_timesteps_cond: 1
@@ -12,15 +13,16 @@ model:
     loss_type: l1
     first_stage_key: "segmentation"
     cond_stage_key: "image"
-    conditioning_key: "concat"
+    conditioning_key: "class_embed"
     image_size: 32
     channels: 4
-    cond_stage_trainable: true    # modified
+    cond_stage_trainable: True    # modified
     concat_mode: True
-    scale_by_std: True
+    scale_by_std: True   
     use_ema: True
     monitor: 'val_avg_dice'
-    ckpt_path: "models/ldm/lsun_churches256/model.ckpt" 
+    ckpt_path: "logs/2024-02-13T17-09-00_binary_9to2/checkpoints/epoch=126-step=69999.ckpt"  # trained binary seg model
+    
 
     scheduler_config: # 10000 warmup steps
       target: ldm.lr_scheduler.LambdaLinearScheduler
@@ -34,6 +36,7 @@ model:
     unet_config:
       target: ldm.modules.diffusionmodules.openaimodel.UNetModel
       params:
+        num_classes: 9   # for multi-class segmentation, no pretrain weight
         image_size: 32
         in_channels: 8  # doubled for concat-mode
         out_channels: 4
@@ -49,9 +52,9 @@ model:
     first_stage_config:
       target: ldm.models.autoencoder.AutoencoderKL
       params:
-        embed_dim: 4
         monitor: "val/rec_loss"
-        ckpt_path: "models/first_stage_models/kl-f8/model.ckpt"
+        # ckpt_path: "models/first_stage_models/kl-f8/model.ckpt"    # reload binary seg pretrained model
+        embed_dim: 4
         ddconfig:
           double_z: True
           z_channels: 4
@@ -66,10 +69,10 @@ model:
         lossconfig:
           target: torch.nn.Identity
 
-    cond_stage_config:
+    cond_stage_config: #"__is_first_stage__"
       target: ldm.modules.encoders.modules.AEEncoderEmbedder
       params:
-        ckpt_path: "models/first_stage_models/kl-f8/model.ckpt"
+        # ckpt_path: "models/first_stage_models/kl-f8/model.ckpt"    # reload binary seg pretrained model
         embed_dim: 4
         double_z: True
         z_channels: 4
@@ -85,14 +88,18 @@ data:
   target: main.DataModuleFromConfig
   params:
     batch_size: 4
-    num_workers: 4
+    num_workers: 8
     wrap: False
     train:
-      target: ldm.data.refuge2.REFUGE2Train
+      target: ldm.data.synapse.SynapseTrain
       params:
         size: 256
     validation:
-      target: ldm.data.refuge2.REFUGE2Validation
+      target: ldm.data.synapse.SynapseValidation
+      params:
+        size: 256
+    test:
+      target: ldm.data.synapse.SynapseValidationVolume
       params:
         size: 256
 
@@ -101,12 +108,12 @@ lightning:
     image_logger:
       target: main.ImageLogger
       params:
-        batch_frequency: 2000
+        batch_frequency: 5000
         max_images: 8
         increase_log_steps: False
-        log_dice_frequency: 2000
+        log_dice_frequency: 5000   # debug: 5; running: 5000
 
 
   trainer:
     benchmark: True
-    check_val_every_n_epoch: 5
+    check_val_every_n_epoch: 10

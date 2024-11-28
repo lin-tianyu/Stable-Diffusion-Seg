@@ -26,11 +26,9 @@
 
 ## 📣 News
 > ⚠️⚠️⚠️ WARNING: for previous users, please set `increase_log_steps: False` in the `*.yaml` setting files, this will reduce meaningless logging process and increase training speed!!!
+- 11/01: Re-implement SDSeg in OOP! Check [here](#dataset-related) for more! (The same model as before, just to make myself happy haha, and I'll do future work based on this version)
 - 10/07: The final published version of the paper is available! See: [![Static Badge](https://img.shields.io/badge/MICCAI-Paper-red?style=flat-square&logo=googledocs)](https://link.springer.com/chapter/10.1007/978-3-031-72111-3_62)
 - 09/29: The MICCAI poster of SDSeg is released: [![Static Badge](https://img.shields.io/badge/MICCAI-Poster-_?style=flat-square&logo=googledocs)](https://drive.google.com/file/d/1nMMQlvNaK8yongQhBSrrbHvMLPI9868j/view?usp=drive_link) See you in Marrakesh!
-
-
-
 - 07/14: We release a [![Static Badge](https://img.shields.io/badge/_-Project_Page-white?style=social&logo=github)](https://lin-tianyu.github.io/Stable-Diffusion-Seg/) for you to understand our work better. Check it out!
 - 06/27: The paper of SDSeg has been pre-released on [![Static Badge](https://img.shields.io/badge/arxiv-2406.18361-white?style=flat&logo=arxiv)](https://arxiv.org/abs/2406.18361)
 - 06/17: 🎉🥳 **SDSeg** has been accepted by MICCAI2024!  Our paper will be available soon.
@@ -182,17 +180,27 @@ This will save 10 times of inference results in `./outputs/` folder. To run the 
 
 
 ## ‼️ Important Files and Folders to Focus on
-Training related:
+### Dataset related
+- Dataset storation: `./data/`
+- Dataloader files: `./ldm/data/`
+### Training related
+#### Original version
+> SDSeg == (modifications of) LatentDiffusion <-- (modifications of) DDPM
 - SDSeg model: `./ldm/models/diffusion/ddpm.py` in the class `LatentDiffusion`.
 - Experiment Configurations: `./configs/latent-diffusion`
+#### New version!!!
+> SDSeg <-- LatentDiffusion <-- DDPM
+- SDSeg model: `./ldm/models/diffusion/SDSeg.py` in the class `SDSeg`.
+- Experiment Configurations: `./configs/SDSeg`
+### Inference related
+
 
 Inference related:
 - Inference starting scripts: `./scripts/slice2seg.py`, 
-- Inference implementation: `./ldm/models/diffusion/ddpm.py`, under the `log_dice` method of `LatentDiffusion`.
+- Inference implementation: 
+  - `./ldm/models/diffusion/ddpm.py`, under the `log_dice` method of `LatentDiffusion`.
+  - `./ldm/models/diffusion/SDSeg.py`, under the `log_dice` method of `SDSeg`.
 
-Dataset related:
-- Dataset storation: `./data/`
-- Dataloader files: `./ldm/data/`
 
 ## 📝 Citation
 If you find our work useful, please cite:
@@ -216,9 +224,9 @@ isbn="978-3-031-72111-3"
 
 ## 🔜 TODO List
 
-- [ ] Add README for multi-class segmentation.
-- [ ] Reimplement SDSeg in OOP. (Elegance is the key!)
+- [x] Reimplement SDSeg in OOP. (Elegance is the key!)
 - [ ] Organizing the inference code. (Toooo redundant right now.)
+- [ ] Add README for multi-class segmentation.
 - [ ] Reduce model checkpoint size (no need to save autoencoder's weights).
 - [ ] Reimplement using diffusers.
 
