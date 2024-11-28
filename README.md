@@ -108,7 +108,7 @@ We evaluate SDSeg on the following medical image datasets:
 |----------------|-----------------------------------------------------------------------------------------------|----------------------------------------------------|
 | `BTCV`         | [This URL](https://www.synapse.org/#!Synapse:syn3193805/wiki/217752), <br>download the `Abdomen/RawData.zip`. | Use the code in <br>`./data/synapse/nii2format.py`     |
 | `STS-3D`       | [This URL](https://toothfairychallenges.github.io/), <br>download the `labelled.zip`.                             | Use the code in <br>`./data/sts3d/sts3d_preprocess.py` |
-| `REFUGE2`      | [This URL](https://www.kaggle.com/datasets/victorlemosml/refuge2)                                                           | Following [this repo](https://github.com/HzFu/MNet_DeepCDR)     |
+| `REFUGE2`      | [This URL](https://www.kaggle.com/datasets/victorlemosml/refuge2)                                                           | Following [this repo](https://github.com/HzFu/MNet_DeepCDR), focusing on `Step_1_Disc_Crop.py`     |
 | `CVC-ClinicDB` | [This URL](https://www.kaggle.com/datasets/balraj98/cvcclinicdb)                                          | None                                               |
 | `Kvasir-SEG`   | [This URL](https://datasets.simula.no/kvasir-seg/)                                                        | None                                               |
 
@@ -146,10 +146,13 @@ You can check the training log by
 tail -f nohup/experiment_name.log
 ```
 
-Also, tensorboard will be on automatically. You can start a tensorboard session with `--logdir=./logs/`
+Also, tensorboard will be on automatically. You can start a tensorboard session with `--logdir=./logs/`. For example,
+```bash
+tensorboard --logdir=./logs/
+```
 
 > [!NOTE]
-> If you want to use parallel training, the code `trainer_config["accelerator"] = "gpu"` in `main.py` should be changed to `trainer_config["accelerator"] = "ddp"`. However, parallel training is not recommended. 
+> If you want to use parallel training, the code `trainer_config["accelerator"] = "gpu"` in `main.py` should be changed to `trainer_config["accelerator"] = "ddp"`. However, parallel training is not recommended since it has no performance gain (in my experience).
 
 > [!WARNING]
 > A single SDSeg model ckeckpoint is around 5GB. By default, save only the last model and the model with the highest dice score. If you have tons of storage space, feel free to save more models by increasing the `save_top_k` parameter in `main.py`.
