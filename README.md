@@ -193,8 +193,6 @@ This will save 10 times of inference results in `./outputs/` folder. To run the 
 - SDSeg model: `./ldm/models/diffusion/SDSeg.py` in the class `SDSeg`.
 - Experiment Configurations: `./configs/SDSeg`
 ### Inference related
-
-
 Inference related:
 - Inference starting scripts: `./scripts/slice2seg.py`, 
 - Inference implementation: 
