@@ -6,10 +6,8 @@
     <a href="https://link.springer.com/chapter/10.1007/978-3-031-72111-3_62"><img alt="Static Badge" src="https://img.shields.io/badge/_-Paper-red?style=for-the-badge&logo=googledocs"></a>
     <a href="https://lin-tianyu.github.io/Stable-Diffusion-Seg/"><img alt="Static Badge" src="https://img.shields.io/badge/_-Project_-green?style=for-the-badge&logo=github"></a>
     <a href="https://arxiv.org/abs/2406.18361"><img alt="Static Badge" src="https://img.shields.io/badge/_-code-black?style=for-the-badge&logo=github"></a>
+    <img src="https://visitor-badge.laobi.icu/badge?page_id=lin-tianyu.Stable-Diffusion-Seg" alt="visitor badge"/>
   </p>
-  
-![visitors](https://visitor-badge.laobi.icu/badge?page_id=lin-tianyu.Stable-Diffusion-Seg)
-
 <p align="center">
   <a href="https://lin-tianyu.github.io"><img alt="Static Badge" src="https://img.shields.io/github/stars/lin-tianyu?label=Tianyu%20Lin"></a>
     <a href=""><img alt="Static Badge" src="https://img.shields.io/badge/Zhiguang_Chen-_-white?style=social"></a>
