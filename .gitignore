@@ -17,7 +17,7 @@ wheels/
 # dataset package
 *.zip
 *.rar
-data/cvc
+data/CVC
 data/kseg
 data/refuge2
 data/sts3d/labelled/
@@ -30,6 +30,7 @@ data/synapse/test_vol/
 # logs
 logs/
 *.out
+nohup/
 
 # pytorch/python/numpy formats
 *.pth
